@@ -1,67 +1,97 @@
 #include <iostream>
+#include <map>
 #include <list>
+#include <queue>
 #include "graph.h"
 #include <cstdlib>
+#include <string>
+#include <fstream>
 
 using namespace std;
 
 
-Graph::Graph(int V)
-{
-  numV = V;
-  adj = new list[V];
-}
-
-void Graph::addEdge(int x, int y)
-{
-  adj.push_back(x);
-  adj.push_back(y);
-}
-
-void Graph::bfs(int n)
+void bfs(int **matrix, int start, int numT, string list, ostream & output)
 {
   // Mark all the vertices as unvisited
-  bool *visited [V];
-  for (int i = 0; i < V; i++)
+  bool visited [numT];
+  for (int i = 0; i < numT; i++)
       visited[i] = false;
 
   // Create a queue
-  list<int> queue;
+  queue<int> toVisit;
+  toVisit.push(start);
+  visited[start] = true;
 
-  // Mark the current node as visited and put it into the queue
-  visited[n] = true;
-  queue.push_back(n);
-
-  // Go through all adjacent vertices of the vertex
-  list<int>::iterator i;
-
-  /* while (!queue.empty())
+  while (!toVisit.empty())
   {
-    // Take out the vertex from the queue
-    n = queue.front();
-    cout << n << " ";
-    queue.pop_front();
+    int curr = toVisit.front();
+    toVisit.pop();
+    cout << list[curr] << endl;   // Could happen before popping
 
-    for (i = adj[n].begin(); i != adj[n].end(); i++)
+    for (int i = 0; i < numT; i++)
     {
-      if (!visited[*i])
+      if (matrix[curr][i] != 0 && (!visited[i]))
       {
-        visited[*i] = true;
-        queue.push_back(*i);
+        toVisit.push(i);
+        visited[i] = true;
       }
     }
-  } */
+  }
 }
 
 int main()
 {
   int numT;
   int numR;
-  string towns;
-  char bflag;
+
+  map<string, int> tMap;
+  list<string> tList;
 
   cin >> numT, numR;
-  cout << "There are " << numT << " number of towns in the province, and " <<
-      numR << " number of road(s)." << endl;
 
-}
+  int rMatrix[numT][numT];
+  int bMatrix[numT][numT];
+
+  for (int i = 0; i <= numT; i++)
+  {
+    string Town;
+    cin >> Town;
+    tList.push_back(Town);
+    tMap.insert(pair<string, int> (Town, i));
+  }
+
+  for (int j = 0; j <= numR; j++)
+  {
+    string Town1;
+    string Town2;
+    char Bridge;
+    int Road;
+    int index1;
+    int index2;
+
+    cin >> Town1;
+    cin >> Town2;
+    cin >> Bridge;
+    cin >> Road;
+
+    index1 = tMap[Town1];
+    index2 = tMap[Town2];
+
+    if (Bridge == 'N')
+      bMatrix[index1][index2] = 0;
+    else
+      bMatrix[index1][index2] = 1;
+
+    rMatrix[index1][index2] = Road;
+  }
+
+  cout << "The input data is: " << endl;
+  filebuf output;
+  ostream os(&output);
+  bfs(rMatrix, 0, numT, tList, output);
+
+  return 0;
+  // cout << "There are " << numT << " number of towns in the province, and " <<
+  //    numR << " number of road(s)." << endl;
+
+};
