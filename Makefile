@@ -15,8 +15,15 @@ CPPFLAGS = -I $(GTEST_ROOT)/include -Wall -Wextra -g
 
 all:	project5 test
 
-graph.cc: graph.h
+project5: project5.o graph.o
 	g++ -o $@ $^
 
-project5: 	graph.o $(SUPPORT_OBJ) project5.o
-	g++ -o $@ $^
+graph.o: graph.h
+
+
+test: project5
+			./project5 < test.in
+
+# %.o: %.cc
+# 	 	g++ -c $<
+
