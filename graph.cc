@@ -21,7 +21,7 @@ void Graph::addEdge(int x, int y)
 void Graph::bfs(int n)
 {
   // Mark all the vertices as unvisited
-  bool *visited = new bool[V];
+  bool *visited [V];
   for (int i = 0; i < V; i++)
       visited[i] = false;
 
@@ -35,7 +35,7 @@ void Graph::bfs(int n)
   // Go through all adjacent vertices of the vertex
   list<int>::iterator i;
 
-  while (!queue.empty())
+  /* while (!queue.empty())
   {
     // Take out the vertex from the queue
     n = queue.front();
@@ -50,7 +50,7 @@ void Graph::bfs(int n)
         queue.push_back(*i);
       }
     }
-  }
+  } */
 }
 
 int main()
