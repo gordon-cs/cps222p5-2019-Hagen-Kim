@@ -26,7 +26,9 @@ void bfs(int **matrix, int start, int numT, string list, ostream & output)
   {
     int curr = toVisit.front();
     toVisit.pop();
-    cout << list[curr] << endl;   // Could happen before popping
+    //RT If you have an argument for where the output should go, use it.
+    // cout << list[curr] << endl;   // Could happen before popping
+    output << list[curr] << endl;   // Could happen before popping
 
     for (int i = 0; i < numT; i++)
     {
@@ -44,6 +46,10 @@ int main()
   int numT;
   int numR;
 
+  //RT These data structures (tMap, tList, rMatrix, bMatrix) need
+  //   comments explaining them.  They probably belong in the Graph
+  //   class, since it looks like they store the graph of towns and
+  //   roads.
   map<string, int> tMap;
   list<string> tList;
 
@@ -86,9 +92,19 @@ int main()
   }
 
   cout << "The input data is: " << endl;
-  filebuf output;
-  ostream os(&output);
-  bfs(rMatrix, 0, numT, tList, output);
+  //RT: The output should all go to cout, which is simpler.
+  // filebuf output;
+  // ostream os(&output);
+  // bfs(rMatrix, 0, numT, tList, output);
+  bfs(rMatrix, 0, numT, tList, cout);
+  //RT: There's a second problem here.  You've created a fixed-sized
+  //    2-D array, with the right size at runtime, but you can't pass
+  //    that to a method, because the method can't know at compile-time
+  //    what size the array will be.  I'd suggest using a vector, instead,
+  //    because its size is adjustable at run-time.
+  //
+  //    On the other hand, if the array were inside the Graph class,
+  //    then it wouldn't need to be an argument.
 
   return 0;
   // cout << "There are " << numT << " number of towns in the province, and " <<

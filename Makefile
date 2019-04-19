@@ -15,7 +15,9 @@ CPPFLAGS = -I $(GTEST_ROOT)/include -Wall -Wextra -g
 
 all:	project5 test
 
-project5: project5.o graph.o
+#RT There's no project5.cc to compile into project5.o, so make fails.
+#RT project5: project5.o graph.o
+project5: graph.o
 	g++ -o $@ $^
 
 graph.o: graph.h
@@ -26,4 +28,3 @@ test: project5
 
 # %.o: %.cc
 # 	 	g++ -c $<
-
