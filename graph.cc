@@ -38,9 +38,34 @@ void Graph::addVertex(Vertex *v)
 }
 
 // Operate BFS traversal
-deque<string> BFS()
+deque<string> Graph::BFS()
 {
-  
+  // Mark all vertices as unvisited
+  bool visited[vertices];
+  for (int i = 0; i < vertices; i++)
+    visited[i] = false;
+
+  // Create a deque
+  deque<Vertex *> toVisit;
+  start = vertices.front();
+  toVisit.push_back(start);
+  visited[start] = true;
+
+  while (!toVisit.empty())
+  {
+    curr = toVisit.front();
+    toVisit.pop();
+
+    for (int j = 0; j < vertices; j++)
+    {
+      if (toVisit[curr] != 0 && (!visited[j]))
+      {
+        toVisit.push_back(j);
+        visited[j] = true;
+      }
+    }
+
+  }
 }
 
 // Get vertex of a city
