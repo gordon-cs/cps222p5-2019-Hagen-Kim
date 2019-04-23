@@ -41,7 +41,7 @@ void Graph::addVertex(Vertex *v)
 deque<string> Graph::BFS()
 {
   // Mark all vertices as unvisited
-  bool visited[vertices];
+  bool visited = new bool [vertices];
   for (int i = 0; i < vertices; i++)
     visited[i] = false;
 
