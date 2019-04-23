@@ -1,5 +1,8 @@
-#include <list>
 #include <iostream>
+#include <map>
+#include <string>
+#include <queue>
+
 using namespace std;
 
 
@@ -11,8 +14,25 @@ class Graph
 
   public:
 
-    Graph(int V);  // Constructor
+    Graph(istream & source);  // Constructor
 
-    void addEdge(int x, int y);  // Function to add an edge
-    void bfs(int n);  // Function to sort/print BFS traversal
+    // Destructor
+    ~Graph()
+    {
+      for (int i = 0; i < numT; i++)
+          delete [] _roadGraph[i];
+      delete [] _roadGraph;
+    }
+
+    // BFS traversal search
+    void bfs();
+
+  private:
+
+    int numT; // Number of towns
+    int numE; // Number of edges
+    string * nameT; // Name of towns
+
+    double ** _roadGraph;  // 
+
 };

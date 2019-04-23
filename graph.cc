@@ -1,3 +1,10 @@
+/*
+ * Project 5
+ * Jenny and FeiFei
+ * Got help from Jahnuel
+ *
+ */
+
 #include <iostream>
 #include <map>
 #include <list>
@@ -10,7 +17,7 @@
 using namespace std;
 
 
-void bfs(int **matrix, int start, int numT, string list, ostream & output)
+void bfs()
 {
   // Mark all the vertices as unvisited
   bool visited [numT];
@@ -19,8 +26,8 @@ void bfs(int **matrix, int start, int numT, string list, ostream & output)
 
   // Create a queue
   queue<int> toVisit;
-  toVisit.push(start);
-  visited[start] = true;
+  toVisit.push(0);
+  visited[0] = true;
 
   while (!toVisit.empty())
   {
@@ -28,12 +35,12 @@ void bfs(int **matrix, int start, int numT, string list, ostream & output)
     toVisit.pop();
     cout << list[curr] << endl;   // Could happen before popping
 
-    for (int i = 0; i < numT; i++)
+    for (int j = 0; j < numT; j++)
     {
-      if (matrix[curr][i] != 0 && (!visited[i]))
+      if (matrix[curr][j] != 0 && (!visited[j]))
       {
-        toVisit.push(i);
-        visited[i] = true;
+        toVisit.push(j);
+        visited[j] = true;
       }
     }
   }
