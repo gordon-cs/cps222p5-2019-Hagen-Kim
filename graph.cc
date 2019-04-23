@@ -5,100 +5,146 @@
  *
  */
 
-#include <iostream>
-#include <map>
-#include <list>
-#include <queue>
 #include "graph.h"
-#include <cstdlib>
+#include <iostream>
+#include <queue>
+#include <list>
 #include <string>
-#include <fstream>
+#include <map>
+#include <vector>
 
 using namespace std;
 
-
-void bfs()
+// Define constructor of class Graph
+Graph::Graph(string fileName)
 {
-  // Mark all the vertices as unvisited
-  bool visited [numT];
-  for (int i = 0; i < numT; i++)
-      visited[i] = false;
-
-  // Create a queue
-  queue<int> toVisit;
-  toVisit.push(0);
-  visited[0] = true;
-
-  while (!toVisit.empty())
-  {
-    int curr = toVisit.front();
-    toVisit.pop();
-    cout << list[curr] << endl;   // Could happen before popping
-
-    for (int j = 0; j < numT; j++)
-    {
-      if (matrix[curr][j] != 0 && (!visited[j]))
-      {
-        toVisit.push(j);
-        visited[j] = true;
-      }
-    }
-  }
+  file = fileName;
 }
 
+// Destructor of class Graph
+Graph::~Graph()
+{ }
+
+// Return vertices
+deque<Vertex *> Graph::getVertexList()
+{
+  return vertices;
+}
+
+// Add a vertex to the deque of vertices
+void Graph::addVertex(Vertex *v)
+{
+  vertices.push_back(v);
+}
+
+// Operate BFS traversal
+deque<string> BFS()
+{
+  
+}
+
+// Get vertex of a city
+Vertex* Graph::getVertex(string citiesName)
+{
+  // Go through all vertices/cities
+  for (int x = 0; x < vertices.size(); x++)
+  {
+    // Return the name of city if found
+    if (vertices.at(x)->getName() == citiesName)
+    {
+      return vertices.at(x);
+    }
+  }
+  // If city is not found, that means it doesn't exist -- so return NULL
+  return NULL;
+}
+
+// Print
+void Graph::print()
+{
+
+}
+
+// Read files
+void Graph::readFile()
+{
+
+}
+
+// Define constructor of class Vertex
+Vertex::Vertex(string name, bool capital)
+{
+  cityName = name;
+  isCapital = capital;
+}
+
+// Destructor of a class Vertex
+Vertex::~Vertex()
+{ }
+
+// Get name of a vertex
+string Vertex::getName()
+{
+  return cityName;
+}
+
+// Add an edge to the list of edges
+void Vertex::addEdge(Edge *e)
+{
+  edges.push_back(e);
+}
+
+// Get edge list
+vector<Edge *> Vertex::getEdgeList()
+{
+  return edges;
+}
+
+// Check if a vertex is capital or not
+bool Vertex::isVertexCapital()
+{
+  return isCapital;
+}
+
+// Define constructor of class Edge
+Edge::Edge(string city1, string city2, bool bridge, int weight)
+{
+  cityOne = city1;
+  cityTwo = city2;
+  isBridge = bridge;
+  weightOfEdges = weight;
+}
+
+// Destructor of a class Edge
+Edge::~Edge()
+{ }
+
+// Return name of city1
+string Edge::getCityOneName()
+{
+  return cityOne;
+}
+
+// Return name of city2
+string Edge::getCityTwoName()
+{
+  return cityTwo;
+}
+
+// Return boolean checking edges as bridge
+bool Edge::isEdgeBridge()
+{
+  return isBridge;
+}
+
+// Return weight of edges
+int Edge::getWeight()
+{
+  return weightOfEdges;
+}
+
+// Main function
 int main()
 {
-  int numT;
-  int numR;
 
-  map<string, int> tMap;
-  list<string> tList;
-
-  cin >> numT, numR;
-
-  int rMatrix[numT][numT];
-  int bMatrix[numT][numT];
-
-  for (int i = 0; i <= numT; i++)
-  {
-    string Town;
-    cin >> Town;
-    tList.push_back(Town);
-    tMap.insert(pair<string, int> (Town, i));
-  }
-
-  for (int j = 0; j <= numR; j++)
-  {
-    string Town1;
-    string Town2;
-    char Bridge;
-    int Road;
-    int index1;
-    int index2;
-
-    cin >> Town1;
-    cin >> Town2;
-    cin >> Bridge;
-    cin >> Road;
-
-    index1 = tMap[Town1];
-    index2 = tMap[Town2];
-
-    if (Bridge == 'N')
-      bMatrix[index1][index2] = 0;
-    else
-      bMatrix[index1][index2] = 1;
-
-    rMatrix[index1][index2] = Road;
-  }
-
-  cout << "The input data is: " << endl;
-  filebuf output;
-  ostream os(&output);
-  bfs(rMatrix, 0, numT, tList, output);
-
-  return 0;
-  // cout << "There are " << numT << " number of towns in the province, and " <<
-  //    numR << " number of road(s)." << endl;
-
-};
+}
