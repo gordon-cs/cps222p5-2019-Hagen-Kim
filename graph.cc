@@ -62,13 +62,14 @@ deque<string> Graph::BFS()
     {
       if (curr != 0 && (!visited))
       {
-        toVisit.push_back();  // Need to figure out what to push into the deque
+        Vertex *newVertex = vertices.front();
+        toVisit.push_back(newVertex);  // Need to figure out what to push into the deque
         visited = true;
       }
     }
 
+    }
   }
-}
 
 // Get vertex of a city
 Vertex* Graph::getVertex(string citiesName)
