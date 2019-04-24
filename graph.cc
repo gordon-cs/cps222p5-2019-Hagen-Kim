@@ -60,10 +60,10 @@ deque<string> Graph::BFS()
 
     for (std::deque<Vertex *>::iterator j = vertices.begin(); (j == vertices.end()); ++j)
     {
-      if (toVisit[curr] != 0 && (!visited[j]))
+      if (curr != 0 && (!visited))
       {
-        toVisit.push_back(j);
-        visited[j] = true;
+        toVisit.push_back();  // Need to figure out what to push into the deque
+        visited = true;
       }
     }
 
