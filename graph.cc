@@ -56,7 +56,7 @@ deque<string> Graph::BFS()
   while (!toVisit.empty())
   {
     Vertex *curr = toVisit.front();
-    toVisit.pop();
+    toVisit.pop_front();
 
     for (std::deque<Vertex *>::iterator j = vertices.begin(); (j == vertices.end()); ++j)
     {
