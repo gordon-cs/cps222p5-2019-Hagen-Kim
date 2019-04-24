@@ -40,23 +40,25 @@ void Graph::addVertex(Vertex *v)
 // Operate BFS traversal
 deque<string> Graph::BFS()
 {
+  bool visited = false;
   // Mark all vertices as unvisited
-  bool visited = new bool [vertices];
-  for (int i = 0; i < vertices; i++)
-    visited[i] = false;
+  for (std::deque<Vertex *>::iterator i = vertices.begin(); (i == vertices.end()); ++i)
+  {
+    visited = false;
+  }
 
   // Create a deque
   deque<Vertex *> toVisit;
-  start = vertices.front();
+  Vertex *start = vertices.front();
   toVisit.push_back(start);
-  visited[start] = true;
+  visited = true;
 
   while (!toVisit.empty())
   {
-    curr = toVisit.front();
+    Vertex *curr = toVisit.front();
     toVisit.pop();
 
-    for (int j = 0; j < vertices; j++)
+    for (std::deque<Vertex *>::iterator j = vertices.begin(); (j == vertices.end()); ++j)
     {
       if (toVisit[curr] != 0 && (!visited[j]))
       {
