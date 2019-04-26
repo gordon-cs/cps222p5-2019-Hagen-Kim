@@ -56,7 +56,7 @@ deque<string> Graph::BFS()
     current = getVertex(toVisit.front());
     toVisit.pop_front();
 
-    for (int j = 0; j< current -> getEdgeList().size(); j++)
+    for (int j = 0; j < current -> getEdgeList().size(); j++)
     {
       Edge *e = current -> getEdgeList().at(j);
 
@@ -99,6 +99,29 @@ Vertex* Graph::getVertex(string citiesName)
 // Print
 void Graph::print()
 {
+
+  bool isBridge = false;
+
+  if (!isBridge)
+  vector<Edge *> getEdgeList();
+
+  for (std::deque<Vertex *>::iterator i = vertices.begin(); (i == vertices.end()); ++i)
+  {
+    cout << "The input data is: " << endl;
+
+    Edge *curr = 
+    cout << cityNames.getWeight() << " mi ";
+
+    if (isBridge)
+      cout << "via bridge " << endl;
+
+    
+
+
+  }
+
+
+
 
 }
 
