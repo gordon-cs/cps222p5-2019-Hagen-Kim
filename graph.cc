@@ -38,34 +38,46 @@ void Graph::addVertex(Vertex *v)
 }
 
 // Operate BFS traversal
+/*
+ * Jahnuel helped me by explaining more of what needed to be done for the BFS traversal function
+ */
 deque<string> Graph::BFS()
 {
   // Mark all vertices as unvisited
-  bool visited = new bool [vertices];
-  for (int i = 0; i < vertices; i++)
-    visited[i] = false;
+  deque<string> toVisit, traversal;
+  string city;
 
-  // Create a deque
-  deque<Vertex *> toVisit;
-  start = vertices.front();
-  toVisit.push_back(start);
-  visited[start] = true;
+  Vertex *current = vertices.at(0);
+  toVisit.push_back(current -> getName());
+  traversal.push_back(current -> getName());
 
-  while (!toVisit.empty())
+  while(!toVisit.empty())
   {
-    curr = toVisit.front();
-    toVisit.pop();
+    current = getVertex(toVisit.front());
+    toVisit.pop_front();
 
-    for (int j = 0; j < vertices; j++)
+    for (int j = 0; j< current -> getEdgeList().size(); j++)
     {
-      if (toVisit[curr] != 0 && (!visited[j]))
-      {
-        toVisit.push_back(j);
-        visited[j] = true;
-      }
-    }
+      Edge *e = current -> getEdgeList().at(j);
 
+      if (e -> getCityOneName() == current -> getName())
+      { 
+          city = e->getCityOneName();
+      }
+      else 
+      {
+          city = e->getCityTwoName();
+      }
+
+      if (find(traversal.begin(), traversal.end(), city) == traversal.end()
+        && find(toVisit.begin(), toVisit.end(), city) == toVisit.end())
+        {
+          toVisit.push_back(city);
+          traversal.push_back(city);
+        }
+    }
   }
+  return traversal;
 }
 
 // Get vertex of a city
