@@ -45,7 +45,7 @@ deque<string> Graph::BFS()
 {
   // Mark all vertices as unvisited
   deque<string> toVisit, traversal;
-  string city;
+  string cityName;
 
   Vertex *current = vertices.at(0);
   toVisit.push_back(current -> getName());
@@ -62,18 +62,18 @@ deque<string> Graph::BFS()
 
       if (e -> getCityOneName() == current -> getName())
       { 
-          city = e->getCityOneName();
+          cityName = e->getCityOneName();
       }
       else 
       {
-          city = e->getCityTwoName();
+          cityName = e->getCityTwoName();
       }
 
-      if (find(traversal.begin(), traversal.end(), city) == traversal.end()
-        && find(toVisit.begin(), toVisit.end(), city) == toVisit.end())
+      if (find(traversal.begin(), traversal.end(), cityName) == traversal.end()
+        && find(toVisit.begin(), toVisit.end(), cityName) == toVisit.end())
         {
-          toVisit.push_back(city);
-          traversal.push_back(city);
+          toVisit.push_back(cityName);
+          traversal.push_back(cityName);
         }
     }
   }
