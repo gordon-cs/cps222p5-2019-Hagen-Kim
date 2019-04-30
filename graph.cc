@@ -171,7 +171,24 @@ void Graph::readFile(ifstream fileInput)
         addVertex(v);
       }
     }
+    else if (list.size() == 4)
+    {
+      std::string b = list.at(2);
+      bool bridge = "false";
 
+      if (b == "B")
+        bridge = true;
+
+      Edge *e = new Edge(list.at(0), list.at(1), bridge, stoi(list.at(3)));
+      Vertex *v;
+      std::vector<Edge *> edges = v -> getEdgeList();
+      v = getVertex(list.at(0));
+      v->addEdge(e);
+      v = getVertex(list.at(1));
+      v->addEdge(e);
+      edges.push_back(e);
+    }
+    list.clear();
   }
 
 
