@@ -13,12 +13,13 @@
 #include <map>
 #include <vector>
 
-using namespace std;
-
 // Define constructor of class Graph
 Graph::Graph(string fileName)
 {
   file = fileName;
+  // file.open(fileName);
+  // readFile();
+  // print();
 }
 
 // Destructor of class Graph
@@ -55,7 +56,7 @@ deque<string> Graph::BFS()
     current = getVertex(toVisit.front());
     toVisit.pop_front();
 
-    for (int j = 0; j< current -> getEdgeList().size(); j++)
+    for (int j = 0; j < current -> getEdgeList().size(); j++)
     {
       Edge *e = current -> getEdgeList().at(j);
 
@@ -95,15 +96,84 @@ Vertex* Graph::getVertex(string citiesName)
   return NULL;
 }
 
-// Print
+// Print graph
 void Graph::print()
 {
+  std::deque<std::string> bfs = BFS();
+  std::deque<std::string>::iterator it = bfs.begin();
+  std::cout << "The input data is: " << std::endl;
+  std::cout << std::endl;
 
+  while (it != bfs.end())
+  {
+    Vertex *curr = getVertex(*it);
+    std::cout << curr -> getName() << std::endl;
+    std::vector<Edge *> edges = curr -> getEdgeList();
+
+    for (int i = 0; i < edges.size(); i++)
+    {
+      std::string edgeName;
+      std::string bridge = "";
+      Edge *e = edges.at(i);
+
+      if (e->getCityOneName() == curr->getName())
+        edgeName = e->getCityTwoName();
+      else 
+        edgeName = e->getCityOneName();
+
+      if (e->isEdgeBridge() == true)
+        bridge = "via bridge";
+
+      std::cout << "\t" << edgeName << " " << e->getWeight() << "mi " << bridge << std::endl;
+    }
+    it++;
+  }
 }
 
 // Read files
-void Graph::readFile()
+void Graph::readFile(ifstream fileInput)
 {
+  // Parameters (String) -- line : to get input from the file (takes in a line at a time)
+  //                 numOfCities : to have the total amount of vertices (appears on the first of first line of the input) ex. "3 2" - 3
+  //                 numOfRoads : to have the total amount of edges (appears on the second of first line of the input) ex "3 2" - 2
+  //                 segment : temporary string to break apart the variable "line" into different things
+  // Parameter (Vector) -- list : to hold each "segment" that is created when splitting a line (will hold every word in a line)
+  std::string line, numOfCities, numOfRoads, segment;
+  std::vector<std::string> list;
+  bool isCapital = true;
+
+  // Read a line from a file
+  while (getline(fileInput, line))
+  { 
+    std::stringstream ss(line);
+    // Split the line by space into a list
+    while (getline(ss, segment, ' '))
+    {
+      list.push_back(segment);
+    }
+    // Check if a line has two segments -- number of towns and roads
+    if(list.size() == 2)
+    {
+      numOfCities = list.at(0);
+      numOfRoads = list.at(1);
+    }
+    else if (list.size() == 1)
+    {
+      if (isCapital)
+      {
+        Vertex *v = new Vertex(list.at(0), true);
+        isCapital = false;
+        addVertex(v);
+      }
+      else 
+      {
+        Vertex *v = new Vertex(list.at(0), false);
+        addVertex(v);
+      }
+    }
+
+  }
+
 
 }
 
@@ -177,10 +247,4 @@ bool Edge::isEdgeBridge()
 int Edge::getWeight()
 {
   return weightOfEdges;
-}
-
-// Main function
-int main()
-{
-
 }

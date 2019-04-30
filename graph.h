@@ -78,13 +78,14 @@ class Graph
     void addVertex(Vertex *);             
     deque<string> BFS();                    
     void print();                         
-    void readFile();                        
+    void readFile(ifstream inputFile);                        
 
   private:
 
     deque<Vertex *> vertices;
     string file;
     string cityNames;
+    fstream fileInput;
 
 };
 
