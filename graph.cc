@@ -12,11 +12,12 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <fstream>
+#include <stack>
 
-using namespace std;
 
 // Define constructor of class Graph
-Graph::Graph(string fileName)
+Graph::Graph(std::string fileName)
 {
   file = fileName;
 }
@@ -26,7 +27,7 @@ Graph::~Graph()
 { }
 
 // Return vertices
-deque<Vertex *> Graph::getVertexList()
+std::deque<Vertex *> Graph::getVertexList()
 {
   return vertices;
 }
@@ -41,11 +42,11 @@ void Graph::addVertex(Vertex *v)
 /*
  * Jahnuel helped me by explaining more of what needed to be done for the BFS traversal function
  */
-deque<string> Graph::BFS()
+std::deque<std::string> Graph::BFS()
 {
   // Mark all vertices as unvisited
-  deque<string> toVisit, traversal;
-  string cityName;
+  std::deque<std::string> toVisit, traversal;
+  std::string cityName;
 
   Vertex *current = vertices.at(0);
   toVisit.push_back(current -> getName());
@@ -81,7 +82,7 @@ deque<string> Graph::BFS()
 }
 
 // Get vertex of a city
-Vertex* Graph::getVertex(string citiesName)
+Vertex* Graph::getVertex(std::string citiesName)
 {
   // Go through all vertices/cities
   for (int x = 0; x < vertices.size(); x++)
@@ -103,19 +104,17 @@ void Graph::print()
   bool isBridge = false;
 
   if (!isBridge)
-  vector<Edge *> getEdgeList();
+  std::vector<Edge *> getEdgeList();
 
   for (std::deque<Vertex *>::iterator i = vertices.begin(); (i == vertices.end()); ++i)
   {
-    cout << "The input data is: " << endl;
+    std::cout << "The input data is: " << std::endl;
 
     Edge *curr = 
-    cout << cityNames.getWeight() << " mi ";
+    std::cout << cityNames.getWeight() << " mi " <<std::endl;
 
     if (isBridge)
-      cout << "via bridge " << endl;
-
-    
+      std::cout << "via bridge " << std::endl;
 
 
   }
@@ -129,10 +128,22 @@ void Graph::print()
 void Graph::readFile()
 {
 
+  std::ifstream inFile;
+
+}
+
+std::stack<std::string> DFS(int s)
+{
+  // Mark all vertices as unvisited
+  std::stack<std::string> toVisit;
+  std::string cityName;
+
+  std::cout<< "If all bridges fail, the following towns would form an isolated group: " <<std::endl;
+
 }
 
 // Define constructor of class Vertex
-Vertex::Vertex(string name, bool capital)
+Vertex::Vertex(std::string name, bool capital)
 {
   cityName = name;
   isCapital = capital;
@@ -143,7 +154,7 @@ Vertex::~Vertex()
 { }
 
 // Get name of a vertex
-string Vertex::getName()
+std::string Vertex::getName()
 {
   return cityName;
 }
@@ -155,7 +166,7 @@ void Vertex::addEdge(Edge *e)
 }
 
 // Get edge list
-vector<Edge *> Vertex::getEdgeList()
+std::vector<Edge *> Vertex::getEdgeList()
 {
   return edges;
 }
@@ -167,7 +178,7 @@ bool Vertex::isVertexCapital()
 }
 
 // Define constructor of class Edge
-Edge::Edge(string city1, string city2, bool bridge, int weight)
+Edge::Edge(std::string city1, std::string city2, bool bridge, int weight)
 {
   cityOne = city1;
   cityTwo = city2;
@@ -180,13 +191,13 @@ Edge::~Edge()
 { }
 
 // Return name of city1
-string Edge::getCityOneName()
+std::string Edge::getCityOneName()
 {
   return cityOne;
 }
 
 // Return name of city2
-string Edge::getCityTwoName()
+std::string Edge::getCityTwoName()
 {
   return cityTwo;
 }
