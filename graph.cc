@@ -17,9 +17,6 @@
 Graph::Graph(string fileName)
 {
   file = fileName;
-  // file.open(fileName);
-  // readFile();
-  // print();
 }
 
 // Destructor of class Graph
