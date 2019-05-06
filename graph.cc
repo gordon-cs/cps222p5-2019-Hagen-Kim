@@ -67,7 +67,7 @@ void Graph::Dijkstra()
 {
   Vertex* current;
   queue<Vertex*> toVisit;
-  vector<Vertex*> visited;
+  vector<Vertex*> belong;
 
   for (int i = 0; i < _vertices.size(); i++) 
   {
@@ -100,29 +100,33 @@ void Graph::Dijkstra()
         }
       }
     }
-    isVisit.pop();
+    toVisit.pop();
   }
 }
 
 void Graph::shortestPath(Vertex *v)
 {
+  cout << "\tThe shortest route from " << _capital->getName() << " to " << v->getName()
+      << " is " << v->getWeight() << " mi" << endl;
   stack <Vertex *> vertices;
   Vertex* current = v;
-  visited.push(current);
+  vertices.push(current);
   while(current -> getName() != _capital -> getName())
   {
-    visited.push(current -> getPredVertex());
+    vertices.push(current -> getPredVertex());
     current = current -> getPredVertex();
   }
-  while (!visited.empty())
+  while (!vertices.empty())
   {
-    visited.pop();
+    cout << "\t\t" << vertices.top()->getName() << endl;
+    vertices.pop();
   }
 }
 
 void Graph::printShortestPath()
 {
   Dijkstra();
+  cout << "The shortest routes from " << _capital->getName() << " are:" << endl;
   for (int i = 1; i < _vertices.size(); i++)
   {
     shortestPath(_vertices[i]);
@@ -170,6 +174,66 @@ void Graph::printMinSpanTree(vector<Edge*> e)
   for (int i = 0; i < e.size(); i++)
   {
     cout << "\t" << e[i]->getCityOne()->getName() << " to " << e[i]->getCityTwo()->getName() << endl;
+  }
+}
+
+void Graph::connectedComponents()
+{
+  cout << "Connected components in event of a major storm are: " << endl;
+  vector<Vertex*> visited;
+  queue<Vertex*> vertices;
+  vertices.push(_capital);
+  while (visited.size() < _vertices.size())
+  {
+    cout << "\tIf all bridges fail, the following towns would form an isolated group: " << endl;
+    vector<Vertex*> belong;
+    Vertex* currentVertex;
+    while (!vertices.empty())
+    {
+      currentVertex = vertices.front();
+      belong.push_back(currentVertex);
+      visited.push_back(currentVertex);
+      vector<Edge*> vEdges = currentVertex->getEdges();
+      for (int i = 0; i < vEdges.size(); i++)
+      {
+        if (!vEdges[i]->isBridge())
+        {
+          bool found = doesBelong(belong, vEdges[i]->getOppositeVertex(currentVertex));
+          if (!found)
+          {
+            vertices.push(vEdges[i]->getOppositeVertex(currentVertex));
+            belong.push_back(vEdges[i]->getOppositeVertex(currentVertex));
+            if (!doesBelong(visited, currentVertex))
+            {
+              visited.push_back(currentVertex);
+            }
+          }
+        }
+      }
+      cout << "\t\t" << vertices.front()->getName() << endl;
+      vertices.pop();
+    }
+    bool done = true;
+    int index = 0;
+    while (done && index != _vertices.size())
+    {
+      bool found = false;
+      int j = 0;
+      while (!found && j != visited.size())
+      {
+        if (_vertices[index] == visited[j])
+          found = true;
+        else 
+          j++;
+      }
+      if (!found)
+      {
+        done = false;
+        vertices.push(_vertices[index]);
+      }
+      else 
+        index++;
+    }
   }
 }
 
