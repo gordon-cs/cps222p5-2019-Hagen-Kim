@@ -16,8 +16,8 @@
 #include <string>
 #include <list>
 #include <vector>
+#include <stack>
 
-using namespace std;
 
 class Edge
 {
@@ -28,17 +28,17 @@ class Edge
      *             bridge -- boolean to check if the edge is a bridge or not
      *             weight -- weight of the edge
      */
-    Edge(string city1, string city2, bool bridge, int weight);
+    Edge(std::string city1, std::string city2, bool bridge, int weight);
     ~Edge();
-    string getCityOneName();
-    string getCityTwoName(); 
+    std::string getCityOneName();
+    std::string getCityTwoName(); 
     bool isEdgeBridge();        
-    int getWeight();            
+    int getWeight();             
 
   private:
 
-    string cityOne;
-    string cityTwo;
+    std::string cityOne;
+    std::string cityTwo;
     bool isBridge;
     int weightOfEdges;
 
@@ -51,18 +51,18 @@ class Vertex
     /* Parameters: name -- name of a vertex
      *             capital -- boolean to check if the vertex is a capital or not
      */
-    Vertex(string name, bool capital);
+    Vertex(std::string name, bool capital);
     ~Vertex();
 
-    string getName();              
+    std::string getName();              
     void addEdge(Edge *e);         
-    vector<Edge *> getEdgeList();   
+    std::vector<Edge *> getEdgeList();   
     bool isVertexCapital();       
 
   private:
-    string cityName;
+    std::string cityName;
     bool isCapital;
-    vector<Edge *> edges;
+    std::vector<Edge *> edges;
 };
 
 class Graph
@@ -70,21 +70,24 @@ class Graph
   public:
 
     // Parameter: fileName -- A file of data
-    Graph(string fileName);
+    Graph(std::string fileName);
     ~Graph();
 
-    deque<Vertex *> getVertexList();       
-    Vertex* getVertex(string citiesName);  
+    std::deque<Vertex *> getVertexList();       
+    Vertex* getVertex(std::string citiesName);  
     void addVertex(Vertex *);             
-    deque<string> BFS();                    
+    std::deque<std::string> BFS();  
+    std::deque<std::string> Dijkstra();
+    void shortestRoute();
+    std::stack<std::string> DFS(int s);                  
     void print();                         
     void readFile();                        
 
   private:
 
-    deque<Vertex *> vertices;
-    string file;
-    string cityNames;
+    std::deque<Vertex *> vertices;
+    std::string file;
+    std::string cityNames;
 
 };
 

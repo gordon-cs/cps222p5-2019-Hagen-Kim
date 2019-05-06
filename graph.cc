@@ -81,6 +81,25 @@ std::deque<std::string> Graph::BFS()
   return traversal;
 }
 
+std::deque<std::string> Dijkstra()
+{
+  std::deque<std::string> toVisit, traversal;
+  std::string cityOne;
+
+  std::deque<Vertex *>;
+  Vertex *current;
+  std::deque<Vertex*> toVisit;
+  std::deque<Vertex*> Visited;
+  
+  for (int i = 0; i < cityOne.size(); i++) 
+  {
+      current = cityOne[i];
+      current -> weightOfEdges;
+
+  }
+}
+
+
 // Get vertex of a city
 Vertex* Graph::getVertex(std::string citiesName)
 {
@@ -135,10 +154,11 @@ void Graph::readFile()
 std::stack<std::string> DFS(int s)
 {
   // Mark all vertices as unvisited
-  std::stack<std::string> toVisit;
+  std::deque<std::string> toVisit, traversal;
   std::string cityName;
 
-  std::cout<< "If all bridges fail, the following towns would form an isolated group: " <<std::endl;
+  
+
 
 }
 
