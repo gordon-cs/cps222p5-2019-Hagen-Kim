@@ -173,6 +173,66 @@ void Graph::printMinSpanTree(vector<Edge*> e)
   }
 }
 
+void Graph::connectedComponents()
+{
+  cout << "Connected components in event of a major storm are: " << endl;
+  vector<Vertex*> visited;
+  queue<Vertex*> vertices;
+  vertices.push(_capital);
+  while (visited.size() < _vertices.size())
+  {
+    cout << "\tIf all bridges fail, the following towns would form an isolated group: " << endl;
+    vector<Vertex*> belong;
+    Vertex* currentVertex;
+    while (!vertices.empty())
+    {
+      currentVertex = vertices.front();
+      belong.push_back(currentVertex);
+      visited.push_back(currentVertex);
+      vector<Edge*> vEdges = currentVertex->getEdges();
+      for (int i = 0; i < vEdges.size(); i++)
+      {
+        if (!vEdges[i]->isBridge())
+        {
+          bool found = doesBelong(belong, vEdges[i]->getOppositeVertex(currentVertex));
+          if (!found)
+          {
+            vertices.push(vEdges[i]->getOppositeVertex(currentVertex));
+            belong.push_back(vEdges[i]->getOppositeVertex(currentVertex));
+            if (!doesBelong(visited, currentVertex))
+            {
+              visited.push_back(currentVertex);
+            }
+          }
+        }
+      }
+      cout << "\t\t" << vertices.front()->getName() << endl;
+      vertices.pop();
+    }
+    bool done = true;
+    int index = 0;
+    while (done && index != _vertices.size())
+    {
+      bool found = false;
+      int j = 0;
+      while (!found && j != visited.size())
+      {
+        if (_vertices[index] == visited[j])
+          found = true;
+        else 
+          j++;
+      }
+      if (!found)
+      {
+        done = false;
+        vertices.push(_vertices[index]);
+      }
+      else 
+        index++;
+    }
+  }
+}
+
 // Get vertex of a city
 Vertex* Graph::getVertex(string citiesName)
 {
