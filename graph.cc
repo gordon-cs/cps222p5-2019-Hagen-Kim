@@ -23,9 +23,6 @@ Graph::~Graph()
 { }
 
 // Operate BFS traversal
-/*
- * Jahnuel helped us by explaining more of what needed to be done for the BFS traversal function
- */
 void Graph::BFS()
 {  
   cout << "The input data is: " << endl;
@@ -43,6 +40,7 @@ void Graph::BFS()
     cout << current->getName() << endl;
     vector<Edge*> vEdges = current->getEdges();
 
+    //checks each edge size to determine the length as well as if it is a bridge or not
     for (int i = 0; i < vEdges.size(); i++)
     {
       cout << "\t" << vEdges[i]->getOppositeVertex(current)->getName() << " " << vEdges[i]->getWeight() << " mi";
@@ -52,7 +50,7 @@ void Graph::BFS()
         cout << " via bridge";
         cout << endl;
       }
-
+      //boolean to check whether edge has been located 
       bool found = doesBelong(belong, vEdges[i]->getOppositeVertex(current));
       //if the opposite vertex is not found, then push to queue
       if (!found)
