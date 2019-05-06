@@ -14,67 +14,53 @@
 #include <vector>
 
 // Define constructor of class Graph
-Graph::Graph(string fileName)
-{
-  file = fileName;
-}
+Graph::Graph(vector<Vertex*> vertices, vector<Edge*> edges, Vertex* capital)
+: _vertices(vertices), _edges(edges), _capital(capital)
+{ }
 
 // Destructor of class Graph
 Graph::~Graph()
 { }
 
-// Return vertices
-deque<Vertex *> Graph::getVertexList()
-{
-  return vertices;
-}
-
-// Add a vertex to the deque of vertices
-void Graph::addVertex(Vertex *v)
-{
-  vertices.push_back(v);
-}
-
 // Operate BFS traversal
 /*
- * Jahnuel helped me by explaining more of what needed to be done for the BFS traversal function
+ * Jahnuel helped us by explaining more of what needed to be done for the BFS traversal function
  */
-deque<string> Graph::BFS()
+void Graph::BFS()
 {  
-  deque<string> toVisit, traversal;
-  string cityName;
+  cout << "The input data is: " << endl;
+  queue<Vertex*> traversal;
+  vector<Vertex*> belog;
+  traversal.push(_capital);
+  Vertex *current;
 
-  Vertex *current = vertices.at(0);
-  toVisit.push_back(current -> getName());
-  traversal.push_back(current -> getName());
-
-  while(!toVisit.empty())
+  while(!traversal.empty())
   {
-    current = getVertex(toVisit.front());
-    toVisit.pop_front();
+    current = traversal.front();
+    belong.push_back(current);
+    cout << current->getName() << endl;
+    vector<Edge*> vEdges = current->getEdges();
 
-    for (int j = 0; j < current -> getEdgeList().size(); j++)
+    for (int i = 0; i < vEdges.size(); i++)
     {
-      Edge *e = current -> getEdgeList().at(j);
+      cout << "\t" << vEdges[i]->getOppositeVertex(current)->getName() << " " << vEdges[i]->getWeight() << " mi";
 
-      if (e -> getCityOneName() == current -> getName())
+      if (vEdges[i]->isBridge())
       { 
-          cityName = e->getCityOneName();
-      }
-      else 
-      {
-          cityName = e->getCityTwoName();
+        cout << " via bridge";
+        cout << endl;
       }
 
-      if (find(traversal.begin(), traversal.end(), cityName) == traversal.end()
-        && find(toVisit.begin(), toVisit.end(), cityName) == toVisit.end())
-        {
-          toVisit.push_back(cityName);
-          traversal.push_back(cityName);
-        }
+      bool found = doesBelong(belong, vEdges[i]->getOppositeVertex(current));
+      if (!found)
+      {
+        traversal.push(vEdges[i]->getOppositeVertex(current));
+        belong.push_back(vEdges[i]->getOppositeVertex(current));
+      }
     }
+
+    traversal.pop();
   }
-  return traversal;
 }
 
 // Get vertex of a city
