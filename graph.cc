@@ -30,17 +30,19 @@ void Graph::BFS()
 {  
   cout << "The input data is: " << endl;
   queue<Vertex*> traversal;
-  vector<Vertex*> belog;
+  vector<Vertex*> belong;
   traversal.push(_capital);
   Vertex *current;
-
+  //while the queue of vertex pointers is not empty
   while(!traversal.empty())
   {
+    //refers to first or the oldest element in the queue
     current = traversal.front();
+    //pushes the current into a vector from the back
     belong.push_back(current);
     cout << current->getName() << endl;
     vector<Edge*> vEdges = current->getEdges();
-
+    
     for (int i = 0; i < vEdges.size(); i++)
     {
       cout << "\t" << vEdges[i]->getOppositeVertex(current)->getName() << " " << vEdges[i]->getWeight() << " mi";
@@ -52,6 +54,7 @@ void Graph::BFS()
       }
 
       bool found = doesBelong(belong, vEdges[i]->getOppositeVertex(current));
+      //if the opposite vertex is not found, then push to queue
       if (!found)
       {
         traversal.push(vEdges[i]->getOppositeVertex(current));
@@ -63,16 +66,19 @@ void Graph::BFS()
   }
 }
 
+//Dijkstra's Shortest Path Algorithm
 void Graph::Dijkstra()
 {
   Vertex* current;
   queue<Vertex*> toVisit;
   vector<Vertex*> belong;
-
+  //checks each vertices to find the smallest one to take
   for (int i = 0; i < _vertices.size(); i++) 
   {
       current = _vertices[i];
+      //sets the all the vertices to be inifinity
       current -> updatePredVertex(std::numeric_limits<double>::max());
+      //sets all the vertices to have no predecessor
       current -> updatePredVertex(NULL);
   }
 
