@@ -27,7 +27,7 @@ void Graph::BFS()
 {  
   cout << "The input data is: " << endl;
   queue<Vertex*> traversal;
-  vector<Vertex*> belog;
+  vector<Vertex*> belong;
   traversal.push(_capital);
   Vertex *current;
   //while the queue of vertex pointers is not empty
@@ -67,40 +67,38 @@ void Graph::BFS()
 //Dijskra's Shortest Path Algorithm
 void Graph::Dijkstra()
 {
-  Vertex* current;
+  Vertex* currentVertex;
   queue<Vertex*> toVisit;
   vector<Vertex*> belong;
   //checks each vertex to locate the smallest one to take
   for (int i = 0; i < _vertices.size(); i++) 
   {
-      current = _vertices[i];
-      //sets all of the vertices to be infinity
-      current -> updatePredVertex(std::numeric_limits<double>::max());
-      //sets all the vertices to have no predecessor
-      current -> updatePredVertex(NULL);
+      currentVertex = _vertices[i];
+      currentVertex->updateWeight(std::numeric_limits<double>::max()); // Set the weight to max
+      currentVertex->updatePredVertex(NULL);  //sets all the vertices to have no predecessor
   }
 
   _capital -> updateWeight(0);
   toVisit.push(_capital);
   while (!toVisit.empty())
   {
-    current = toVisit.front();
-    belong.push_back(current);
-    vector<Edge *> adjEdges = current -> getEdges();
+    currentVertex = toVisit.front();
+    belong.push_back(currentVertex);
+    vector<Edge*> adjEdges = currentVertex->getEdges();
     Vertex* adjVertex;
     for (int i = 0; i < adjEdges.size(); i++)
     {
-      adjVertex = adjEdges[i] -> getOppositeVertex(current);
-      bool has = doesBelong(belong, adjVertex);
-      if (!has)
+      adjVertex = adjEdges[i]->getOppositeVertex(currentVertex);
+      bool found = doesBelong(belong, adjVertex);
+      if (!found)
       {
         toVisit.push(adjVertex);
         belong.push_back(adjVertex);
-        double altWeight = current -> getWeight() + adjEdges[i] -> getWeight();
-        if (altWeight < adjVertex -> getWeight())
+        double altWeight = currentVertex->getWeight() + adjEdges[i]->getWeight();
+        if (altWeight < adjVertex->getWeight())
         {
-          adjVertex -> updateWeight(alt);
-          adjEdges -> updatePredVertex(current);
+          adjVertex->updateWeight(altWeight);
+          adjVertex->updatePredVertex(currentVertex);
         }
       }
     }
@@ -108,22 +106,21 @@ void Graph::Dijkstra()
   }
 }
 
-void Graph::shortestPath(Vertex *v)
+void Graph::shortestPath(Vertex* v)
 {
-  cout << "\tThe shortest route from " << _capital->getName() << " to " << v->getName()
-      << " is " << v->getWeight() << " mi" << endl;
-  stack <Vertex *> vertices;
+  cout << "\tThe shortest route from " << _capital->getName() << " to " << v->getName() << " is " << v->getWeight() << " mi" << endl;
+  stack<Vertex*> visitedVertices;
   Vertex* current = v;
-  vertices.push(current);
-  while(current -> getName() != _capital -> getName())
+  visitedVertices.push(current);
+  while(current->getName() != _capital->getName())
   {
-    vertices.push(current -> getPredVertex());
-    current = current -> getPredVertex();
+    visitedVertices.push(current->getPredVertex());
+    current = current->getPredVertex();
   }
-  while (!vertices.empty())
+  while (!visitedVertices.empty())
   {
-    cout << "\t\t" << vertices.top()->getName() << endl;
-    vertices.pop();
+    cout << "\t\t" << visitedVertices.top()->getName() << endl;
+    visitedVertices.pop();
   }
 }
 
@@ -354,7 +351,7 @@ Vertex* Graph::findVertex(string name)
   while (!found)
   {
     if (_vertices[index]->getName() == name)
-      found == true;
+      found = true;
     else
       index++;
   }
