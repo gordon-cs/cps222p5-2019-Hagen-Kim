@@ -19,9 +19,6 @@ Graph::Graph(vector<Vertex*> vertices, vector<Edge*> edges, Vertex* capital)
 { }
 
 // Operate BFS traversal
-/*
- * Jahnuel helped us by explaining more of what needed to be done for the BFS traversal function
- */
 void Graph::BFS()
 {  
   cout << "The input data is: " << endl;
@@ -29,14 +26,17 @@ void Graph::BFS()
   vector<Vertex*> belong;
   traversal.push(_capital);
   Vertex *current;
-
+  //while the queue of vertex pointers is not empty
   while(!traversal.empty())
   {
+    //refers to first or the oldest element in the queue
     current = traversal.front();
+    //pushes the current into a vector from the back
     belong.push_back(current);
     cout << current->getName() << endl;
     vector<Edge*> vEdges = current->getEdges();
 
+    //checks each edge size to determine the length as well as if it is a bridge or not
     for (int i = 0; i < vEdges.size(); i++)
     {
       cout << "\t" << vEdges[i]->getOppositeVertex(current)->getName() << " " << vEdges[i]->getWeight() << " mi";
@@ -46,8 +46,9 @@ void Graph::BFS()
         cout << " via bridge";
         cout << endl;
       }
-
+      //boolean to check whether edge has been located 
       bool found = doesBelong(belong, vEdges[i]->getOppositeVertex(current));
+      //if the opposite vertex is not found, then push to queue
       if (!found)
       {
         traversal.push(vEdges[i]->getOppositeVertex(current));
@@ -59,17 +60,18 @@ void Graph::BFS()
   }
 }
 
+//Dijskra's Shortest Path Algorithm
 void Graph::Dijkstra()
 {
   Vertex* currentVertex;
   queue<Vertex*> toVisit;
   vector<Vertex*> belong;
-
+  //checks each vertex to locate the smallest one to take
   for (int i = 0; i < _vertices.size(); i++) 
   {
       currentVertex = _vertices[i];
       currentVertex->updateWeight(std::numeric_limits<double>::max()); // Set the weight to max
-      currentVertex->updatePredVertex(NULL);
+      currentVertex->updatePredVertex(NULL);  //sets all the vertices to have no predecessor
   }
 
   _capital -> updateWeight(0);
@@ -128,6 +130,7 @@ void Graph::printShortestPath()
   }
 }
 
+//Minimizing Spanning Tree Algorithm
 vector<Edge*> Graph::minSpanTree()
 {
   vector<Edge*> spanningTree;
@@ -172,6 +175,7 @@ void Graph::printMinSpanTree(vector<Edge*> e)
   }
 }
 
+//Connected Components Algorithm
 void Graph::connectedComponents()
 {
   cout << "Connected components in event of a major storm are: " << endl;
@@ -251,6 +255,7 @@ bool Graph::DFS(Vertex* v, vector<Vertex*> &visitedVertex, vector<Edge*> &treeEd
     return false;
 }
 
+//Articulation Points Algorithm
 void Graph::articulationPoints()
 {
   vector<Vertex*> visitedVertex;
