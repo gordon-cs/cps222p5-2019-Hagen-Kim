@@ -32,7 +32,6 @@ class Vertex
 
     /* Constructor */
     Vertex(string name);
-    ~Vertex();
 
     // Accessor for name of vertex
     string getName();   
@@ -75,7 +74,6 @@ class Edge
 
     /* Constructor */
     Edge(Vertex* city1, Vertex* city2, bool bridge, double weight);
-    ~Edge();
 
     // Accessor of city 1
     Vertex* getCityOne();
@@ -108,7 +106,6 @@ class Graph
 
     /* Constructor */
     Graph(vector<Vertex*> vertices, vector<Edge*> edges, Vertex* capital);
-    ~Graph();
 
     // Traverse vertices by breadth-first search
     void BFS(); 
