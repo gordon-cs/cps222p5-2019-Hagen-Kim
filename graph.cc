@@ -81,21 +81,69 @@ std::deque<std::string> Graph::BFS()
   return traversal;
 }
 
-std::deque<std::string> Dijkstra()
+void Graph::Dijkstra()
 {
-  std::deque<std::string> toVisit, traversal;
-  std::string cityOne;
+  Vertex* current;
+  queue<Vertex*> toVisit;
+  vector<Vertex*> visited;
 
-  std::deque<Vertex *>;
-  Vertex *current;
-  std::deque<Vertex*> toVisit;
-  std::deque<Vertex*> Visited;
-  
-  for (int i = 0; i < cityOne.size(); i++) 
+  for (int i = 0; i < _vertices.size(); i++) 
   {
-      current = cityOne[i];
-      current -> weightOfEdges;
+      current = _vertices[i];
+      current -> updatePredVertex(std::numeric_limits<double>::max());
+      current -> updatePredVertex(NULL);
+  }
 
+  _capital -> updateWeight(0);
+  toVisit.push(_capital);
+  while (!toVisit.empty())
+  {
+    current = toVisit.front();
+    belong.push_back(current);
+    vector<Edge *> adjEdges = current -> getEdges();
+    Vertex* adjVertex;
+    for (int i = 0; i < adjEdges.size(); i++)
+    {
+      adjVertex = adjEdges[i] -> getOppositeVertex(current);
+      bool has = doesBelong(belong, adjVertex);
+      if (!has)
+      {
+        toVisit.push(adjVertex);
+        belong.push_back(adjVertex);
+        double altWeight = current -> getWeight() + adjEdges[i] -> getWeight();
+        if (altWeight < adjVertex -> getWeight())
+        {
+          adjVertex -> updateWeight(alt);
+          adjEdges -> updatePredVertex(current);
+        }
+      }
+    }
+    isVisit.pop();
+  }
+}
+
+void Graph::shortestPath(Vertex *v)
+{
+  stack <Vertex *> vertices;
+  Vertex* current = v;
+  visited.push(current);
+  while(current -> getName() != _capital -> getName())
+  {
+    visited.push(current -> getPredVertex());
+    current = current -> getPredVertex();
+  }
+  while (!visited.empty())
+  {
+    visited.pop();
+  }
+}
+
+void Graph::printShortestPath()
+{
+  Dijkstra();
+  for (int i = 1; i < _vertices.size(); i++)
+  {
+    shortestPath(_vertices[i]);
   }
 }
 
