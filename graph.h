@@ -23,6 +23,7 @@ using std::queue;
 using std::vector;
 using std::stack;
 
+// Forward declarations
 class Vertex;
 class Edge;
 
@@ -56,8 +57,6 @@ class Vertex
 
     // Update weight when necessary
     void updateWeight(double weight);
-
-    
 
   private:
 

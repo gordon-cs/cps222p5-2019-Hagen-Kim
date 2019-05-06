@@ -102,6 +102,7 @@ void Graph::Dijkstra()
   }
 }
 
+// Shortest route from capital to a vertex
 void Graph::shortestPath(Vertex* v)
 {
   cout << "\tThe shortest route from " << _capital->getName() << " to " << v->getName() << " is " << v->getWeight() << " mi" << endl;
@@ -120,6 +121,7 @@ void Graph::shortestPath(Vertex* v)
   }
 }
 
+// Print the shortest path
 void Graph::printShortestPath()
 {
   Dijkstra();
@@ -166,6 +168,7 @@ vector<Edge*> Graph::minSpanTree()
   return spanningTree;
 }
 
+// Print the minimum spanning tree
 void Graph::printMinSpanTree(vector<Edge*> e)
 {
   cout << "The road upgrading goal can be achieved at minimal cost by upgrading: " << endl;
@@ -175,7 +178,7 @@ void Graph::printMinSpanTree(vector<Edge*> e)
   }
 }
 
-//Connected Components Algorithm
+//Connected Components Algorithm to list vertices when bridges fail
 void Graph::connectedComponents()
 {
   cout << "Connected components in event of a major storm are: " << endl;
@@ -236,6 +239,7 @@ void Graph::connectedComponents()
   }
 }
 
+// Depth-first search traversal to visit all vertices
 bool Graph::DFS(Vertex* v, vector<Vertex*> &visitedVertex, vector<Edge*> &treeEdges)
 {
   vector<Edge*> adjEdges = v->getEdges();
@@ -330,16 +334,19 @@ void Graph::articulationPoints()
   }
 }
 
-// Get vertex of a city
+// Return vertices or towns
 vector<Vertex*> Graph::getVertices()
 { return _vertices; }
 
+// Return edges or roads
 vector<Edge*> Graph::getEdges()
 { return _edges; }
 
+// Return capital
 Vertex* Graph::getCapital()
 { return _capital; }
 
+// Find vertex
 Vertex* Graph::findVertex(string name)
 {
   bool found = false;
@@ -354,6 +361,7 @@ Vertex* Graph::findVertex(string name)
   return _vertices[index];
 }
 
+// Get the position of a vertex
 int Graph::getVertexPosition(Vertex* v, vector<Vertex*> vertices)
 {
   bool found = false;
@@ -368,6 +376,7 @@ int Graph::getVertexPosition(Vertex* v, vector<Vertex*> vertices)
   return index;
 }
 
+// Boolean to check if a vertex is seen
 bool Graph::doesBelong(vector<Vertex*> belong, Vertex* v)
 {
   bool found = false;
@@ -385,6 +394,7 @@ bool Graph::doesBelong(vector<Vertex*> belong, Vertex* v)
   return found;
 }
 
+// Boolean to check if an edge is a tree
 bool Graph::isTreeEdge(Edge* e, vector<Edge*> treeEdges)
 {
   for (int i = 0; i < treeEdges.size(); i++)
@@ -395,9 +405,11 @@ bool Graph::isTreeEdge(Edge* e, vector<Edge*> treeEdges)
   return false;
 }
 
+// Compare weights of edges between the capital and vertices
 bool Graph::verticesWeightComparator::operator()(Vertex* a, Vertex* b)
 { return a->getWeight() > b->getWeight(); }
 
+// Compare weights of edges
 bool Graph::edgesWeightComparator::operator()(Edge* a, Edge* b)
 { return a->getWeight() > b->getWeight(); }
 
@@ -419,12 +431,15 @@ vector<Edge*> Vertex::getEdges()
 void Vertex::addEdge(Edge* e)
 {  _edges.push_back(e); }
 
+// Get the predecessor vertex
 Vertex* Vertex::getPredVertex()
 { return _predVertex; }
 
+// Get weight
 double Vertex::getWeight()
 { return _weight; }
 
+// Boolean to check if a vertex is adjacent
 bool Vertex::isAdjacent(Vertex* v)
 {
   for (int i = 0; i < _edges.size(); i++)
@@ -435,9 +450,11 @@ bool Vertex::isAdjacent(Vertex* v)
   return false;
 }
 
+// Update the predecessor vertex
 void Vertex::updatePredVertex(Vertex* v)
 { _predVertex = v; }
 
+// Update the weight
 void Vertex::updateWeight(double weight)
 { _weight = weight; }
 
