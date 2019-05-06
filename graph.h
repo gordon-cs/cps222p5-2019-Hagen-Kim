@@ -23,38 +23,8 @@ using std::queue;
 using std::vector;
 using std::stack;
 
-class Edge
-{
-  public:
-
-    /* Constructor */
-    Edge(Vertex* city1, Vertex* city2, bool bridge, double weight);
-    ~Edge();
-
-    // Accessor of city 1
-    Vertex* getCityOne();
-
-    // Accessor of city 2
-    Vertex* getCityTwo(); 
-
-    // Boolean to check if the edge is a bridge or not
-    bool isBridge();        
-
-    // Accessor for weight
-    double getWeight(); 
-
-    // Accessor for the opposite vertex
-    Vertex* getOppositeVertex(Vertex* v);           
-
-  private:
-
-    // Instant variables
-    Vertex* _city1;
-    Vertex* _city2;
-    bool _bridge;
-    double _weight;
-
-};
+class Vertex;
+class Edge;
 
 class Vertex
 {
@@ -97,6 +67,39 @@ class Vertex
     vector<Edge *> _edges;
     Vertex* _predVertex;
     double _weight;
+};
+
+class Edge
+{
+  public:
+
+    /* Constructor */
+    Edge(Vertex* city1, Vertex* city2, bool bridge, double weight);
+    ~Edge();
+
+    // Accessor of city 1
+    Vertex* getCityOne();
+
+    // Accessor of city 2
+    Vertex* getCityTwo(); 
+
+    // Boolean to check if the edge is a bridge or not
+    bool isBridge();        
+
+    // Accessor for weight
+    double getWeight(); 
+
+    // Accessor for the opposite vertex
+    Vertex* getOppositeVertex(Vertex* v);           
+
+  private:
+
+    // Instant variables
+    Vertex* _city1;
+    Vertex* _city2;
+    bool _bridge;
+    double _weight;
+
 };
 
 class Graph
