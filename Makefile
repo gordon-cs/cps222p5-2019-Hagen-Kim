@@ -25,6 +25,3 @@ graph.o: graph.h
 
 test: project5
 			./project5 < test.in
-
-# %.o: %.cc
-# 	 	g++ -c $<
