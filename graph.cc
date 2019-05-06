@@ -33,10 +33,12 @@ void Graph::BFS()
   vector<Vertex*> belog;
   traversal.push(_capital);
   Vertex *current;
-
+  //while the queue of vertex pointers is not empty
   while(!traversal.empty())
   {
+    //refers to first or the oldest element in the queue
     current = traversal.front();
+    //pushes the current into a vector from the back
     belong.push_back(current);
     cout << current->getName() << endl;
     vector<Edge*> vEdges = current->getEdges();
@@ -52,6 +54,7 @@ void Graph::BFS()
       }
 
       bool found = doesBelong(belong, vEdges[i]->getOppositeVertex(current));
+      //if the opposite vertex is not found, then push to queue
       if (!found)
       {
         traversal.push(vEdges[i]->getOppositeVertex(current));
@@ -63,16 +66,19 @@ void Graph::BFS()
   }
 }
 
+//Dijskra's Shortest Path Algorithm
 void Graph::Dijkstra()
 {
   Vertex* current;
   queue<Vertex*> toVisit;
   vector<Vertex*> belong;
-
+  //checks each vertex to locate the smallest one to take
   for (int i = 0; i < _vertices.size(); i++) 
   {
       current = _vertices[i];
+      //sets all of the vertices to be infinity
       current -> updatePredVertex(std::numeric_limits<double>::max());
+      //sets all the vertices to have no predecessor
       current -> updatePredVertex(NULL);
   }
 
@@ -133,6 +139,7 @@ void Graph::printShortestPath()
   }
 }
 
+//Minimizing Spanning Tree Algorithm
 vector<Edge*> Graph::minSpanTree()
 {
   vector<Edge*> spanningTree;
@@ -177,6 +184,7 @@ void Graph::printMinSpanTree(vector<Edge*> e)
   }
 }
 
+//Connected Components Algorithm
 void Graph::connectedComponents()
 {
   cout << "Connected components in event of a major storm are: " << endl;
@@ -256,6 +264,7 @@ bool Graph::DFS(Vertex* v, vector<Vertex*> &visitedVertex, vector<Edge*> &treeEd
     return false;
 }
 
+//Articulation Points Algorithm
 void Graph::articulationPoints()
 {
   vector<Vertex*> visitedVertex;
