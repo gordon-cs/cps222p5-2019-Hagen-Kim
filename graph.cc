@@ -85,7 +85,7 @@ void Graph::Dijkstra()
 {
   Vertex* current;
   queue<Vertex*> toVisit;
-  vector<Vertex*> visited;
+  vector<Vertex*> belong;
 
   for (int i = 0; i < _vertices.size(); i++) 
   {
@@ -118,29 +118,33 @@ void Graph::Dijkstra()
         }
       }
     }
-    isVisit.pop();
+    toVisit.pop();
   }
 }
 
 void Graph::shortestPath(Vertex *v)
 {
+  cout << "\tThe shortest route from " << _capital->getName() << " to " << v->getName()
+      << " is " << v->getWeight() << " mi" << endl;
   stack <Vertex *> vertices;
   Vertex* current = v;
-  visited.push(current);
+  vertices.push(current);
   while(current -> getName() != _capital -> getName())
   {
-    visited.push(current -> getPredVertex());
+    vertices.push(current -> getPredVertex());
     current = current -> getPredVertex();
   }
-  while (!visited.empty())
+  while (!vertices.empty())
   {
-    visited.pop();
+    cout << "\t\t" << vertices.top()->getName() << endl;
+    vertices.pop();
   }
 }
 
 void Graph::printShortestPath()
 {
   Dijkstra();
+  cout << "The shortest routes from " << _capital->getName() << " are:" << endl;
   for (int i = 1; i < _vertices.size(); i++)
   {
     shortestPath(_vertices[i]);
