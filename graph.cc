@@ -1,7 +1,7 @@
 /*
  * Project 5
  * Jenny and FeiFei
- * Got help from Jahnuel
+ * Got help from Jahnuel and Stephen to understand better
  *
  */
 
@@ -401,12 +401,11 @@ bool Graph::verticesWeightComparator::operator()(Vertex* a, Vertex* b)
 bool Graph::edgesWeightComparator::operator()(Edge* a, Edge* b)
 { return a->getWeight() > b->getWeight(); }
 
+
 // Define constructor of class Vertex
-Vertex::Vertex(string name, bool capital)
-{
-  cityName = name;
-  isCapital = capital;
-}
+Vertex::Vertex(string name)
+: _name(name)
+{ }
 
 // Destructor of a class Vertex
 Vertex::~Vertex()
@@ -414,61 +413,68 @@ Vertex::~Vertex()
 
 // Get name of a vertex
 string Vertex::getName()
-{
-  return cityName;
-}
+{ return _name; }
+
+// Get edges of a vertex
+vector<Edge*> Vertex::getEdges()
+{ return _edges; }
 
 // Add an edge to the list of edges
-void Vertex::addEdge(Edge *e)
+void Vertex::addEdge(Edge* e)
+{  _edges.push_back(e); }
+
+Vertex* Vertex::getPredVertex()
+{ return _predVertex; }
+
+double Vertex::getWeight()
+{ return _weight; }
+
+bool Vertex::isAdjacent(Vertex* v)
 {
-  edges.push_back(e);
+  for (int i = 0; i < _edges.size(); i++)
+  {
+    if (_edges[i]->getOppositeVertex(v)->getName() == _name)
+      return true;
+  }
+  return false;
 }
 
-// Get edge list
-vector<Edge *> Vertex::getEdgeList()
-{
-  return edges;
-}
+void Vertex::updatePredVertex(Vertex* v)
+{ _predVertex = v; }
 
-// Check if a vertex is capital or not
-bool Vertex::isVertexCapital()
-{
-  return isCapital;
-}
+void Vertex::updateWeight(double weight)
+{ _weight = weight; }
+
 
 // Define constructor of class Edge
-Edge::Edge(string city1, string city2, bool bridge, int weight)
-{
-  cityOne = city1;
-  cityTwo = city2;
-  isBridge = bridge;
-  weightOfEdges = weight;
-}
+Edge::Edge(Vertex* city1, Vertex* city2, bool bridge, double weight)
+: _city1(city1), _city2(city2), _bridge(bridge), _weight(weight)
+{ }
 
 // Destructor of a class Edge
 Edge::~Edge()
 { }
 
 // Return name of city1
-string Edge::getCityOneName()
-{
-  return cityOne;
-}
+Vertex* Edge::getCityOne()
+{ return _city1; }
 
 // Return name of city2
-string Edge::getCityTwoName()
-{
-  return cityTwo;
-}
+Vertex* Edge::getCityTwo()
+{ return _city2; }
 
 // Return boolean checking edges as bridge
-bool Edge::isEdgeBridge()
-{
-  return isBridge;
-}
+bool Edge::isBridge()
+{ return _bridge; }
 
 // Return weight of edges
-int Edge::getWeight()
+double Edge::getWeight()
+{ return _weight; }
+
+Vertex* Edge::getOppositeVertex(Vertex* v)
 {
-  return weightOfEdges;
+  if (_city2->getName() != v->getName())
+    return _city2;
+  else 
+    return _city1;
 }

@@ -65,7 +65,10 @@ class Vertex
     ~Vertex();
 
     // Accessor for name of vertex
-    string getName();     
+    string getName();   
+
+    // Accessor for the list of edges    
+    vector<Edge *> getEdges();   
 
     // Add an edge to the vertex's vector
     void addEdge(Edge *e);  
@@ -85,8 +88,7 @@ class Vertex
     // Update weight when necessary
     void updateWeight(double weight);
 
-    // Accessor for the list of edges    
-    vector<Edge *> getEdgeList();   
+    
 
   private:
 
