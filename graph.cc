@@ -18,10 +18,6 @@ Graph::Graph(vector<Vertex*> vertices, vector<Edge*> edges, Vertex* capital)
 : _vertices(vertices), _edges(edges), _capital(capital)
 { }
 
-// Destructor of class Graph
-Graph::~Graph()
-{ }
-
 // Operate BFS traversal
 /*
  * Jahnuel helped us by explaining more of what needed to be done for the BFS traversal function
@@ -406,10 +402,6 @@ Vertex::Vertex(string name)
 : _name(name)
 { }
 
-// Destructor of a class Vertex
-Vertex::~Vertex()
-{ }
-
 // Get name of a vertex
 string Vertex::getName()
 { return _name; }
@@ -448,10 +440,6 @@ void Vertex::updateWeight(double weight)
 // Define constructor of class Edge
 Edge::Edge(Vertex* city1, Vertex* city2, bool bridge, double weight)
 : _city1(city1), _city2(city2), _bridge(bridge), _weight(weight)
-{ }
-
-// Destructor of a class Edge
-Edge::~Edge()
 { }
 
 // Return name of city1
