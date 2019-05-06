@@ -63,6 +63,50 @@ void Graph::BFS()
   }
 }
 
+vector<Edge*> Graph::minSpanTree()
+{
+  vector<Edge*> spanningTree;
+  vector<Vertex*> belong;
+  Vertex* currentVertex = _capital;
+  vector<Edge*> availableEdges;
+  belong.push_back(_capital);
+  Edge* smallestEdge;
+  double minWeight;
+  while(spanningTree.size() < _vertices.size() - 1)
+  {
+    minWeight = std::numeric_limits<double>::max();
+
+    for (int i = 0; i < belong.size(); i++)
+    {
+      currentVertex = belong[i];
+      availableEdges = currentVertex->getEdges();
+      for (int j = 0; j < availableEdges.size(); j++)
+      {
+        if ((availableEdges[j]->getWeight() < minWeight) && (!isTreeEdge(availableEdges[j], spanningTree)) && (doesBelong(belong, availableEdges[j]->getOppositeVertex(currentVertex))))
+        {
+          smallestEdge = availableEdges[j];
+          minWeight = availableEdges[j]->getWeight();
+        }
+      }
+    }
+    if (!isTreeEdge(smallestEdge, spanningTree))
+    {
+      spanningTree.push_back(smallestEdge);
+    }
+    belong.push_back(smallestEdge->getOppositeVertex(currentVertex));
+  }
+  return spanningTree;
+}
+
+void Graph::printMinSpanTree(vector<Edge*> e)
+{
+  cout << "The road upgrading goal can be achieved at minimal cost by upgrading: " << endl;
+  for (int i = 0; i < e.size(); i++)
+  {
+    cout << "\t" << e[i]->getCityOne()->getName() << " to " << e[i]->getCityTwo()->getName() << endl;
+  }
+}
+
 // Get vertex of a city
 Vertex* Graph::getVertex(string citiesName)
 {

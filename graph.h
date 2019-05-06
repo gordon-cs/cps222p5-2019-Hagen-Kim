@@ -121,7 +121,7 @@ class Graph
     vector<Edge*> minSpanTree();
 
     // Print the minimum spanning tree
-    void printMinSpanTree();
+    void printMinSpanTree(vector<Edge*> e);
 
     // Find the partitioned regions when bridges are destroyed by storm
     void connectedComponents();
