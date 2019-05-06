@@ -12,73 +12,55 @@
 #include <string>
 #include <map>
 #include <vector>
-#include <fstream>
-#include <stack>
-
 
 // Define constructor of class Graph
-Graph::Graph(std::string fileName)
-{
-  file = fileName;
-}
+Graph::Graph(vector<Vertex*> vertices, vector<Edge*> edges, Vertex* capital)
+: _vertices(vertices), _edges(edges), _capital(capital)
+{ }
 
 // Destructor of class Graph
 Graph::~Graph()
 { }
 
-// Return vertices
-std::deque<Vertex *> Graph::getVertexList()
-{
-  return vertices;
-}
-
-// Add a vertex to the deque of vertices
-void Graph::addVertex(Vertex *v)
-{
-  vertices.push_back(v);
-}
-
 // Operate BFS traversal
 /*
- * Jahnuel helped me by explaining more of what needed to be done for the BFS traversal function
+ * Jahnuel helped us by explaining more of what needed to be done for the BFS traversal function
  */
-std::deque<std::string> Graph::BFS()
-{
-  // Mark all vertices as unvisited
-  std::deque<std::string> toVisit, traversal;
-  std::string cityName;
+void Graph::BFS()
+{  
+  cout << "The input data is: " << endl;
+  queue<Vertex*> traversal;
+  vector<Vertex*> belog;
+  traversal.push(_capital);
+  Vertex *current;
 
-  Vertex *current = vertices.at(0);
-  toVisit.push_back(current -> getName());
-  traversal.push_back(current -> getName());
-
-  while(!toVisit.empty())
+  while(!traversal.empty())
   {
-    current = getVertex(toVisit.front());
-    toVisit.pop_front();
+    current = traversal.front();
+    belong.push_back(current);
+    cout << current->getName() << endl;
+    vector<Edge*> vEdges = current->getEdges();
 
-    for (int j = 0; j < current -> getEdgeList().size(); j++)
+    for (int i = 0; i < vEdges.size(); i++)
     {
-      Edge *e = current -> getEdgeList().at(j);
+      cout << "\t" << vEdges[i]->getOppositeVertex(current)->getName() << " " << vEdges[i]->getWeight() << " mi";
 
-      if (e -> getCityOneName() == current -> getName())
+      if (vEdges[i]->isBridge())
       { 
-          cityName = e->getCityOneName();
-      }
-      else 
-      {
-          cityName = e->getCityTwoName();
+        cout << " via bridge";
+        cout << endl;
       }
 
-      if (find(traversal.begin(), traversal.end(), cityName) == traversal.end()
-        && find(toVisit.begin(), toVisit.end(), cityName) == toVisit.end())
-        {
-          toVisit.push_back(cityName);
-          traversal.push_back(cityName);
-        }
+      bool found = doesBelong(belong, vEdges[i]->getOppositeVertex(current));
+      if (!found)
+      {
+        traversal.push(vEdges[i]->getOppositeVertex(current));
+        belong.push_back(vEdges[i]->getOppositeVertex(current));
+      }
     }
+
+    traversal.pop();
   }
-  return traversal;
 }
 
 void Graph::Dijkstra()
@@ -151,9 +133,17 @@ void Graph::printShortestPath()
   }
 }
 
+void Graph::printShortestPath()
+{
+  Dijkstra();
+  for (int i = 1; i < _vertices.size(); i++)
+  {
+    shortestPath(_vertices[i]);
+  }
+}
 
 // Get vertex of a city
-Vertex* Graph::getVertex(std::string citiesName)
+Vertex* Graph::getVertex(string citiesName)
 {
   // Go through all vertices/cities
   for (int x = 0; x < vertices.size(); x++)
@@ -168,54 +158,106 @@ Vertex* Graph::getVertex(std::string citiesName)
   return NULL;
 }
 
-// Print
+// Print graph
 void Graph::print()
 {
+  std::deque<std::string> bfs = BFS();
+  std::deque<std::string>::iterator it = bfs.begin();
+  std::cout << "The input data is: " << std::endl;
+  std::cout << std::endl;
 
-  bool isBridge = false;
-
-  if (!isBridge)
-  std::vector<Edge *> getEdgeList();
-
-  for (std::deque<Vertex *>::iterator i = vertices.begin(); (i == vertices.end()); ++i)
+  while (it != bfs.end())
   {
-    std::cout << "The input data is: " << std::endl;
+    Vertex *curr = getVertex(*it);
+    std::cout << curr -> getName() << std::endl;
+    std::vector<Edge *> edges = curr -> getEdgeList();
 
-    Edge *curr = 
-    std::cout << cityNames.getWeight() << " mi " <<std::endl;
+    for (int i = 0; i < edges.size(); i++)
+    {
+      std::string edgeName;
+      std::string bridge = "";
+      Edge *e = edges.at(i);
 
-    if (isBridge)
-      std::cout << "via bridge " << std::endl;
+      if (e->getCityOneName() == curr->getName())
+        edgeName = e->getCityTwoName();
+      else 
+        edgeName = e->getCityOneName();
 
+      if (e->isEdgeBridge() == true)
+        bridge = "via bridge";
 
+      std::cout << "\t" << edgeName << " " << e->getWeight() << "mi " << bridge << std::endl;
+    }
+    it++;
   }
-
-
-
-
 }
 
 // Read files
-void Graph::readFile()
+void Graph::readFile(ifstream fileInput)
 {
+  // Parameters (String) -- line : to get input from the file (takes in a line at a time)
+  //                 numOfCities : to have the total amount of vertices (appears on the first of first line of the input) ex. "3 2" - 3
+  //                 numOfRoads : to have the total amount of edges (appears on the second of first line of the input) ex "3 2" - 2
+  //                 segment : temporary string to break apart the variable "line" into different things
+  // Parameter (Vector) -- list : to hold each "segment" that is created when splitting a line (will hold every word in a line)
+  std::string line, numOfCities, numOfRoads, segment;
+  std::vector<std::string> list;
+  bool isCapital = true;
 
-  std::ifstream inFile;
+  // Read a line from a file
+  while (getline(fileInput, line))
+  { 
+    std::stringstream ss(line);
+    // Split the line by space into a list
+    while (getline(ss, segment, ' '))
+    {
+      list.push_back(segment);
+    }
+    // Check if a line has two segments -- number of towns and roads
+    if(list.size() == 2)
+    {
+      numOfCities = list.at(0);
+      numOfRoads = list.at(1);
+    }
+    else if (list.size() == 1)
+    {
+      if (isCapital)
+      {
+        Vertex *v = new Vertex(list.at(0), true);
+        isCapital = false;
+        addVertex(v);
+      }
+      else 
+      {
+        Vertex *v = new Vertex(list.at(0), false);
+        addVertex(v);
+      }
+    }
+    else if (list.size() == 4)
+    {
+      std::string b = list.at(2);
+      bool bridge = "false";
 
-}
+      if (b == "B")
+        bridge = true;
 
-std::stack<std::string> DFS(int s)
-{
-  // Mark all vertices as unvisited
-  std::deque<std::string> toVisit, traversal;
-  std::string cityName;
-
-  
+      Edge *e = new Edge(list.at(0), list.at(1), bridge, stoi(list.at(3)));
+      Vertex *v;
+      std::vector<Edge *> edges = v -> getEdgeList();
+      v = getVertex(list.at(0));
+      v->addEdge(e);
+      v = getVertex(list.at(1));
+      v->addEdge(e);
+      edges.push_back(e);
+    }
+    list.clear();
+  }
 
 
 }
 
 // Define constructor of class Vertex
-Vertex::Vertex(std::string name, bool capital)
+Vertex::Vertex(string name, bool capital)
 {
   cityName = name;
   isCapital = capital;
@@ -226,7 +268,7 @@ Vertex::~Vertex()
 { }
 
 // Get name of a vertex
-std::string Vertex::getName()
+string Vertex::getName()
 {
   return cityName;
 }
@@ -238,7 +280,7 @@ void Vertex::addEdge(Edge *e)
 }
 
 // Get edge list
-std::vector<Edge *> Vertex::getEdgeList()
+vector<Edge *> Vertex::getEdgeList()
 {
   return edges;
 }
@@ -250,7 +292,7 @@ bool Vertex::isVertexCapital()
 }
 
 // Define constructor of class Edge
-Edge::Edge(std::string city1, std::string city2, bool bridge, int weight)
+Edge::Edge(string city1, string city2, bool bridge, int weight)
 {
   cityOne = city1;
   cityTwo = city2;
@@ -263,13 +305,13 @@ Edge::~Edge()
 { }
 
 // Return name of city1
-std::string Edge::getCityOneName()
+string Edge::getCityOneName()
 {
   return cityOne;
 }
 
 // Return name of city2
-std::string Edge::getCityTwoName()
+string Edge::getCityTwoName()
 {
   return cityTwo;
 }
@@ -284,10 +326,4 @@ bool Edge::isEdgeBridge()
 int Edge::getWeight()
 {
   return weightOfEdges;
-}
-
-// Main function
-int main()
-{
-
 }
