@@ -237,6 +237,33 @@ void Graph::connectedComponents()
   }
 }
 
+bool Graph::DFS(Vertex* v, vector<Vertex*> &visitedVertex, vector<Edge*> &treeEdges)
+{
+  vector<Edge*> adjEdges = v->getEdges();
+  for (int i = 0; i < adjEdges.size(); i++)
+  {
+    Edge* currentEdge = adjEdges[i];
+    if (!doesBelong(visitedVertex, currentEdge->getOppositeVertex(v)))
+    {
+      treeEdges.push_back(adjEdges[i]);
+      visitedVertex.push_back(currentEdge->getOppositeVertex(v));
+      DFS(currentEdge->getOppositeVertex(v), visitedVertex, treeEdges);
+    }
+  }
+  if (visitedVertex.size() == _vertices.size())
+    return true;
+  else 
+    return false;
+}
+
+void Graph::articulationPoints()
+{
+  vector<Vertex*> visitedVertex;
+  vector<Edge*> treeEdges;
+  visitedVertex.push_back(_capital);
+  DFS(_capital, visitedVertex, treeEdges);
+}
+
 // Get vertex of a city
 Vertex* Graph::getVertex(string citiesName)
 {
