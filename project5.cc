@@ -1,4 +1,4 @@
-#include "graph.cc"
+#include "graph.h"
 #include <iostream>
 #include <queue>
 #include <list>
@@ -7,7 +7,7 @@
 #include <vector>
 
 // Main function
-int main(int argc, char const *argv[])
+int main(int argc, char *argv[])
 {
   while (!std::cin.eof())
   {
@@ -78,7 +78,7 @@ int main(int argc, char const *argv[])
     Graph g(vertices, edges, capital);
     g.BFS();
     g.printShortestPath();
-    g.printMinSpanTree();
+    g.printMinSpanTree(g.minSpanTree());
     g.connectedComponents();
     g.articulationPoints();
     cout << "----------------------------------------------" << endl;
