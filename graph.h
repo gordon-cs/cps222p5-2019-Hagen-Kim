@@ -11,83 +11,170 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <deque>
 #include <queue>
+#include <stack>
 #include <string>
 #include <list>
 #include <vector>
-#include <stack>
 
+using std::cout;
+using std::endl;
+using std::string;
+using std::queue;
+using std::vector;
+using std::stack;
 
-class Edge
-{
-  public:
-
-    /* Parameters: city1 -- initial point
-     *             city2 -- final point
-     *             bridge -- boolean to check if the edge is a bridge or not
-     *             weight -- weight of the edge
-     */
-    Edge(std::string city1, std::string city2, bool bridge, int weight);
-    ~Edge();
-    std::string getCityOneName();
-    std::string getCityTwoName(); 
-    bool isEdgeBridge();        
-    int getWeight();             
-
-  private:
-
-    std::string cityOne;
-    std::string cityTwo;
-    bool isBridge;
-    int weightOfEdges;
-
-};
+// Forward declarations
+class Vertex;
+class Edge;
 
 class Vertex
 {
   public:
 
-    /* Parameters: name -- name of a vertex
-     *             capital -- boolean to check if the vertex is a capital or not
-     */
-    Vertex(std::string name, bool capital);
-    ~Vertex();
+    /* Constructor */
+    Vertex(string name);
 
-    std::string getName();              
-    void addEdge(Edge *e);         
-    std::vector<Edge *> getEdgeList();   
-    bool isVertexCapital();       
+    // Accessor for name of vertex
+    string getName();   
+
+    // Accessor for the list of edges    
+    vector<Edge *> getEdges();   
+
+    // Add an edge to the vertex's vector
+    void addEdge(Edge *e);  
+    
+    // Accessor for predecessor vertex
+    Vertex* getPredVertex();   
+
+    // Accessor for weight
+    double getWeight();
+
+    // Boolean to check if a vertex is adjacent or not
+    bool isAdjacent(Vertex* v);
+
+    // Update predecessor vertex if shorter route is found
+    void updatePredVertex(Vertex* v);
+
+    // Update weight when necessary
+    void updateWeight(double weight);
 
   private:
-    std::string cityName;
-    bool isCapital;
-    std::vector<Edge *> edges;
+
+    // Instance variables
+    string _name;
+    vector<Edge *> _edges;
+    Vertex* _predVertex;
+    double _weight;
+};
+
+class Edge
+{
+  public:
+
+    /* Constructor */
+    Edge(Vertex* city1, Vertex* city2, bool bridge, double weight);
+
+    // Accessor of city 1
+    Vertex* getCityOne();
+
+    // Accessor of city 2
+    Vertex* getCityTwo(); 
+
+    // Boolean to check if the edge is a bridge or not
+    bool isBridge();        
+
+    // Accessor for weight
+    double getWeight(); 
+
+    // Accessor for the opposite vertex
+    Vertex* getOppositeVertex(Vertex* v);           
+
+  private:
+
+    // Instant variables
+    Vertex* _city1;
+    Vertex* _city2;
+    bool _bridge;
+    double _weight;
+
 };
 
 class Graph
 {
   public:
 
-    // Parameter: fileName -- A file of data
-    Graph(std::string fileName);
-    ~Graph();
+    /* Constructor */
+    Graph(vector<Vertex*> vertices, vector<Edge*> edges, Vertex* capital);
 
-    std::deque<Vertex *> getVertexList();       
-    Vertex* getVertex(std::string citiesName);  
-    void addVertex(Vertex *);             
-    std::deque<std::string> BFS();  
-    std::deque<std::string> Dijkstra();
-    void shortestRoute();
-    std::stack<std::string> DFS(int s);                  
-    void print();                         
-    void readFile();                        
+    // Traverse vertices by breadth-first search
+    void BFS(); 
+
+    // Dijkstra's algorithm to find shortest paths from capital
+    void Dijkstra();
+
+    // Find shortest path from the capital to a vertex
+    void shortestPath(Vertex* v);
+
+    // Print the shortest path
+    void printShortestPath();
+
+    // Create a minimum spanning tree
+    vector<Edge*> minSpanTree();
+
+    // Print the minimum spanning tree
+    void printMinSpanTree(vector<Edge*> e);
+
+    // Find the partitioned regions when bridges are destroyed by storm
+    void connectedComponents();
+
+    // Find articulation points
+    void articulationPoints();
+
+    // Traverse by depth-first search
+    bool DFS(Vertex* v, vector<Vertex*> &visited, vector<Edge*> &treeEdges);
+
+    // Accessor for vertices
+    vector<Vertex*> getVertices();
+
+    // Accessor for edges
+    vector<Edge*> getEdges();
+
+    // Accessor for capital
+    Vertex* getCapital();
+
+    // Accessor for a vertex given the name of city
+    Vertex* findVertex(string name);                                   
 
   private:
 
-    std::deque<Vertex *> vertices;
-    std::string file;
-    std::string cityNames;
+    // Instance variables
+    vector<Vertex*> _vertices;
+    vector<Edge*> _edges;
+    Vertex* _capital;
+
+    // Get the position of a vertex
+    int getVertexPosition(Vertex* v, vector<Vertex*> vertices);
+
+    // Boolean to check if a given vertex is within a vector
+    bool doesBelong(vector<Vertex*> belong, Vertex* v);
+
+    // Boolean to check if a given edge is a tree edge
+    bool isTreeEdge(Edge* e, vector<Edge*> treeEdges);
+
+class verticesWeightComparator
+{
+  public:
+    // Compare vertices based on their weights from the capital
+    bool operator()(Vertex* a, Vertex* b);
+};
+
+class edgesWeightComparator
+{
+  public:
+    //Compare edges based on their weights from one another
+    bool operator()(Edge* a, Edge* b);
+};
 
 };
 

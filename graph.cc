@@ -1,7 +1,7 @@
 /*
  * Project 5
  * Jenny and FeiFei
- * Got help from Jahnuel
+ * Got help from Jahnuel and Stephen to understand better
  *
  */
 
@@ -18,14 +18,7 @@ Graph::Graph(vector<Vertex*> vertices, vector<Edge*> edges, Vertex* capital)
 : _vertices(vertices), _edges(edges), _capital(capital)
 { }
 
-// Destructor of class Graph
-Graph::~Graph()
-{ }
-
 // Operate BFS traversal
-/*
- * Jahnuel helped us by explaining more of what needed to be done for the BFS traversal function
- */
 void Graph::BFS()
 {  
   cout << "The input data is: " << endl;
@@ -42,7 +35,8 @@ void Graph::BFS()
     belong.push_back(current);
     cout << current->getName() << endl;
     vector<Edge*> vEdges = current->getEdges();
-    
+
+    //checks each edge size to determine the length as well as if it is a bridge or not
     for (int i = 0; i < vEdges.size(); i++)
     {
       cout << "\t" << vEdges[i]->getOppositeVertex(current)->getName() << " " << vEdges[i]->getWeight() << " mi";
@@ -52,7 +46,7 @@ void Graph::BFS()
         cout << " via bridge";
         cout << endl;
       }
-
+      //boolean to check whether edge has been located 
       bool found = doesBelong(belong, vEdges[i]->getOppositeVertex(current));
       //if the opposite vertex is not found, then push to queue
       if (!found)
@@ -66,43 +60,41 @@ void Graph::BFS()
   }
 }
 
-//Dijkstra's Shortest Path Algorithm
+//Dijskra's Shortest Path Algorithm
 void Graph::Dijkstra()
 {
-  Vertex* current;
+  Vertex* currentVertex;
   queue<Vertex*> toVisit;
   vector<Vertex*> belong;
-  //checks each vertices to find the smallest one to take
+  //checks each vertex to locate the smallest one to take
   for (int i = 0; i < _vertices.size(); i++) 
   {
-      current = _vertices[i];
-      //sets the all the vertices to be inifinity
-      current -> updatePredVertex(std::numeric_limits<double>::max());
-      //sets all the vertices to have no predecessor
-      current -> updatePredVertex(NULL);
+      currentVertex = _vertices[i];
+      currentVertex->updateWeight(std::numeric_limits<double>::max()); // Set the weight to max
+      currentVertex->updatePredVertex(NULL);  //sets all the vertices to have no predecessor
   }
 
   _capital -> updateWeight(0);
   toVisit.push(_capital);
   while (!toVisit.empty())
   {
-    current = toVisit.front();
-    belong.push_back(current);
-    vector<Edge *> adjEdges = current -> getEdges();
+    currentVertex = toVisit.front();
+    belong.push_back(currentVertex);
+    vector<Edge*> adjEdges = currentVertex->getEdges();
     Vertex* adjVertex;
     for (int i = 0; i < adjEdges.size(); i++)
     {
-      adjVertex = adjEdges[i] -> getOppositeVertex(current);
-      bool has = doesBelong(belong, adjVertex);
-      if (!has)
+      adjVertex = adjEdges[i]->getOppositeVertex(currentVertex);
+      bool found = doesBelong(belong, adjVertex);
+      if (!found)
       {
         toVisit.push(adjVertex);
         belong.push_back(adjVertex);
-        double altWeight = current -> getWeight() + adjEdges[i] -> getWeight();
-        if (altWeight < adjVertex -> getWeight())
+        double altWeight = currentVertex->getWeight() + adjEdges[i]->getWeight();
+        if (altWeight < adjVertex->getWeight())
         {
-          adjVertex -> updateWeight(alt);
-          adjEdges -> updatePredVertex(current);
+          adjVertex->updateWeight(altWeight);
+          adjVertex->updatePredVertex(currentVertex);
         }
       }
     }
@@ -110,25 +102,26 @@ void Graph::Dijkstra()
   }
 }
 
-void Graph::shortestPath(Vertex *v)
+// Shortest route from capital to a vertex
+void Graph::shortestPath(Vertex* v)
 {
-  cout << "\tThe shortest route from " << _capital->getName() << " to " << v->getName()
-      << " is " << v->getWeight() << " mi" << endl;
-  stack <Vertex *> vertices;
+  cout << "\tThe shortest route from " << _capital->getName() << " to " << v->getName() << " is " << v->getWeight() << " mi" << endl;
+  stack<Vertex*> visitedVertices;
   Vertex* current = v;
-  vertices.push(current);
-  while(current -> getName() != _capital -> getName())
+  visitedVertices.push(current);
+  while(current->getName() != _capital->getName())
   {
-    vertices.push(current -> getPredVertex());
-    current = current -> getPredVertex();
+    visitedVertices.push(current->getPredVertex());
+    current = current->getPredVertex();
   }
-  while (!vertices.empty())
+  while (!visitedVertices.empty())
   {
-    cout << "\t\t" << vertices.top()->getName() << endl;
-    vertices.pop();
+    cout << "\t\t" << visitedVertices.top()->getName() << endl;
+    visitedVertices.pop();
   }
 }
 
+// Print the shortest path
 void Graph::printShortestPath()
 {
   Dijkstra();
@@ -139,197 +132,358 @@ void Graph::printShortestPath()
   }
 }
 
-void Graph::printShortestPath()
+//Minimizing Spanning Tree Algorithm
+vector<Edge*> Graph::minSpanTree()
 {
-  Dijkstra();
-  for (int i = 1; i < _vertices.size(); i++)
+  vector<Edge*> spanningTree;
+  vector<Vertex*> belong;
+  Vertex* currentVertex = _capital;
+  vector<Edge*> availableEdges;
+  belong.push_back(_capital);
+  Edge* smallestEdge;
+  double minWeight;
+  while(spanningTree.size() < _vertices.size() - 1)
   {
-    shortestPath(_vertices[i]);
-  }
-}
+    minWeight = std::numeric_limits<double>::max();
 
-// Get vertex of a city
-Vertex* Graph::getVertex(string citiesName)
-{
-  // Go through all vertices/cities
-  for (int x = 0; x < vertices.size(); x++)
-  {
-    // Return the name of city if found
-    if (vertices.at(x)->getName() == citiesName)
+    for (int i = 0; i < belong.size(); i++)
     {
-      return vertices.at(x);
-    }
-  }
-  // If city is not found, that means it doesn't exist -- so return NULL
-  return NULL;
-}
-
-// Print graph
-void Graph::print()
-{
-  std::deque<std::string> bfs = BFS();
-  std::deque<std::string>::iterator it = bfs.begin();
-  std::cout << "The input data is: " << std::endl;
-  std::cout << std::endl;
-
-  while (it != bfs.end())
-  {
-    Vertex *curr = getVertex(*it);
-    std::cout << curr -> getName() << std::endl;
-    std::vector<Edge *> edges = curr -> getEdgeList();
-
-    for (int i = 0; i < edges.size(); i++)
-    {
-      std::string edgeName;
-      std::string bridge = "";
-      Edge *e = edges.at(i);
-
-      if (e->getCityOneName() == curr->getName())
-        edgeName = e->getCityTwoName();
-      else 
-        edgeName = e->getCityOneName();
-
-      if (e->isEdgeBridge() == true)
-        bridge = "via bridge";
-
-      std::cout << "\t" << edgeName << " " << e->getWeight() << "mi " << bridge << std::endl;
-    }
-    it++;
-  }
-}
-
-// Read files
-void Graph::readFile(ifstream fileInput)
-{
-  // Parameters (String) -- line : to get input from the file (takes in a line at a time)
-  //                 numOfCities : to have the total amount of vertices (appears on the first of first line of the input) ex. "3 2" - 3
-  //                 numOfRoads : to have the total amount of edges (appears on the second of first line of the input) ex "3 2" - 2
-  //                 segment : temporary string to break apart the variable "line" into different things
-  // Parameter (Vector) -- list : to hold each "segment" that is created when splitting a line (will hold every word in a line)
-  std::string line, numOfCities, numOfRoads, segment;
-  std::vector<std::string> list;
-  bool isCapital = true;
-
-  // Read a line from a file
-  while (getline(fileInput, line))
-  { 
-    std::stringstream ss(line);
-    // Split the line by space into a list
-    while (getline(ss, segment, ' '))
-    {
-      list.push_back(segment);
-    }
-    // Check if a line has two segments -- number of towns and roads
-    if(list.size() == 2)
-    {
-      numOfCities = list.at(0);
-      numOfRoads = list.at(1);
-    }
-    else if (list.size() == 1)
-    {
-      if (isCapital)
+      currentVertex = belong[i];
+      availableEdges = currentVertex->getEdges();
+      for (int j = 0; j < availableEdges.size(); j++)
       {
-        Vertex *v = new Vertex(list.at(0), true);
-        isCapital = false;
-        addVertex(v);
+        if ((availableEdges[j]->getWeight() < minWeight) && (!isTreeEdge(availableEdges[j], spanningTree)) && (doesBelong(belong, availableEdges[j]->getOppositeVertex(currentVertex))))
+        {
+          smallestEdge = availableEdges[j];
+          minWeight = availableEdges[j]->getWeight();
+        }
+      }
+    }
+    if (!isTreeEdge(smallestEdge, spanningTree))
+    {
+      spanningTree.push_back(smallestEdge);
+    }
+    belong.push_back(smallestEdge->getOppositeVertex(currentVertex));
+  }
+  return spanningTree;
+}
+
+// Print the minimum spanning tree
+void Graph::printMinSpanTree(vector<Edge*> e)
+{
+  cout << "The road upgrading goal can be achieved at minimal cost by upgrading: " << endl;
+  for (int i = 0; i < e.size(); i++)
+  {
+    cout << "\t" << e[i]->getCityOne()->getName() << " to " << e[i]->getCityTwo()->getName() << endl;
+  }
+}
+
+//Connected Components Algorithm to list vertices when bridges fail
+void Graph::connectedComponents()
+{
+  cout << "Connected components in event of a major storm are: " << endl;
+  vector<Vertex*> visited;
+  queue<Vertex*> vertices;
+  vertices.push(_capital);
+  while (visited.size() < _vertices.size())
+  {
+    cout << "\tIf all bridges fail, the following towns would form an isolated group: " << endl;
+    vector<Vertex*> belong;
+    Vertex* currentVertex;
+    while (!vertices.empty())
+    {
+      currentVertex = vertices.front();
+      belong.push_back(currentVertex);
+      visited.push_back(currentVertex);
+      vector<Edge*> vEdges = currentVertex->getEdges();
+      for (int i = 0; i < vEdges.size(); i++)
+      {
+        if (!vEdges[i]->isBridge())
+        {
+          bool found = doesBelong(belong, vEdges[i]->getOppositeVertex(currentVertex));
+          if (!found)
+          {
+            vertices.push(vEdges[i]->getOppositeVertex(currentVertex));
+            belong.push_back(vEdges[i]->getOppositeVertex(currentVertex));
+            if (!doesBelong(visited, currentVertex))
+            {
+              visited.push_back(currentVertex);
+            }
+          }
+        }
+      }
+      cout << "\t\t" << vertices.front()->getName() << endl;
+      vertices.pop();
+    }
+    bool done = true;
+    int index = 0;
+    while (done && index != _vertices.size())
+    {
+      bool found = false;
+      int j = 0;
+      while (!found && j != visited.size())
+      {
+        if (_vertices[index] == visited[j])
+          found = true;
+        else 
+          j++;
+      }
+      if (!found)
+      {
+        done = false;
+        vertices.push(_vertices[index]);
+      }
+      else 
+        index++;
+    }
+  }
+}
+
+// Depth-first search traversal to visit all vertices
+bool Graph::DFS(Vertex* v, vector<Vertex*> &visitedVertex, vector<Edge*> &treeEdges)
+{
+  vector<Edge*> adjEdges = v->getEdges();
+  for (int i = 0; i < adjEdges.size(); i++)
+  {
+    Edge* currentEdge = adjEdges[i];
+    if (!doesBelong(visitedVertex, currentEdge->getOppositeVertex(v)))
+    {
+      treeEdges.push_back(adjEdges[i]);
+      visitedVertex.push_back(currentEdge->getOppositeVertex(v));
+      DFS(currentEdge->getOppositeVertex(v), visitedVertex, treeEdges);
+    }
+  }
+  if (visitedVertex.size() == _vertices.size())
+    return true;
+  else 
+    return false;
+}
+
+//Articulation Points Algorithm
+void Graph::articulationPoints()
+{
+  vector<Vertex*> visitedVertex;
+  vector<Edge*> treeEdges;
+  visitedVertex.push_back(_capital);
+  DFS(_capital, visitedVertex, treeEdges);
+  int lows[visitedVertex.size()];
+  for (int i = 0; i < visitedVertex.size(); i++)
+  {
+    lows[i] = i;
+  }
+  Vertex* currentVertex;
+  for (int i = visitedVertex.size() - 1; i >= 0; i--)
+  {
+    currentVertex = visitedVertex[i];
+    vector<Edge*> adjEdges = currentVertex->getEdges();
+    int DFSPosition = getVertexPosition(currentVertex, visitedVertex);
+    for (int j = 0; j < adjEdges.size(); j++)
+    {
+      if (!isTreeEdge(adjEdges[j], treeEdges))
+      {
+        int backedgeVertex = getVertexPosition(adjEdges[j]->getOppositeVertex(currentVertex), visitedVertex);
+        if (backedgeVertex < lows[DFSPosition])
+          lows[DFSPosition] = backedgeVertex;
       }
       else 
       {
-        Vertex *v = new Vertex(list.at(0), false);
-        addVertex(v);
+        if (getVertexPosition(adjEdges[j]->getOppositeVertex(currentVertex), visitedVertex) > getVertexPosition(currentVertex, visitedVertex))
+        {
+          if (lows[getVertexPosition(adjEdges[j]->getOppositeVertex(currentVertex), visitedVertex)] <= lows[i])
+          {
+            lows[i] = lows[getVertexPosition(adjEdges[j]->getOppositeVertex(currentVertex), visitedVertex)];
+          }
+        }
       }
     }
-    else if (list.size() == 4)
-    {
-      std::string b = list.at(2);
-      bool bridge = "false";
-
-      if (b == "B")
-        bridge = true;
-
-      Edge *e = new Edge(list.at(0), list.at(1), bridge, stoi(list.at(3)));
-      Vertex *v;
-      std::vector<Edge *> edges = v -> getEdgeList();
-      v = getVertex(list.at(0));
-      v->addEdge(e);
-      v = getVertex(list.at(1));
-      v->addEdge(e);
-      edges.push_back(e);
-    }
-    list.clear();
   }
-
-
+  vector<Vertex*> articulationPoints;
+  int rootChild = 0;
+  for (int i = 0; i < visitedVertex.size(); i++)
+  {
+    currentVertex = visitedVertex[i];
+    vector<Edge*> adjEdges = currentVertex->getEdges();
+    for (int j = 0; j < adjEdges.size(); j++)
+    {
+      int DFSPositionOpp = getVertexPosition(adjEdges[j]->getOppositeVertex(currentVertex), visitedVertex);
+      if (i == 0 && isTreeEdge(adjEdges[j], treeEdges))
+      {
+        rootChild++;
+      }
+      if (DFSPositionOpp > i && isTreeEdge(adjEdges[j], treeEdges) && i != 0)
+      {
+        if (i <= lows[DFSPositionOpp] && !doesBelong(articulationPoints, currentVertex))
+        {
+          articulationPoints.push_back(currentVertex);
+        }
+      }
+    }
+  }
+  if (rootChild > 1)
+  {
+    articulationPoints.push_back(_capital);
+  }
+  cout << "Obliterating any of the following would result in the province becoming disconnected: " << endl;
+  for (int i = 0; i < articulationPoints.size(); i++)
+  {
+    cout << "\t" << articulationPoints[i]->getName() << endl;
+  }
+  if (articulationPoints.empty())
+  {
+    cout << "\tNONE" << endl;
+  }
 }
+
+// Return vertices or towns
+vector<Vertex*> Graph::getVertices()
+{ return _vertices; }
+
+// Return edges or roads
+vector<Edge*> Graph::getEdges()
+{ return _edges; }
+
+// Return capital
+Vertex* Graph::getCapital()
+{ return _capital; }
+
+// Find vertex
+Vertex* Graph::findVertex(string name)
+{
+  bool found = false;
+  int index = 0;
+  while (!found)
+  {
+    if (_vertices[index]->getName() == name)
+      found = true;
+    else
+      index++;
+  }
+  return _vertices[index];
+}
+
+// Get the position of a vertex
+int Graph::getVertexPosition(Vertex* v, vector<Vertex*> vertices)
+{
+  bool found = false;
+  int index = 0;
+  while (!found)
+  {
+    if (vertices[index] == v)
+      found = true;
+    else
+      index++;
+  }
+  return index;
+}
+
+// Boolean to check if a vertex is seen
+bool Graph::doesBelong(vector<Vertex*> belong, Vertex* v)
+{
+  bool found = false;
+  int index = 0;
+  while (!belong.empty() && index != belong.size())
+  {
+    if (belong[index]->getName() == v->getName())
+    {
+      index = belong.size();
+      found = true;
+    }
+    else 
+      index++;
+  }
+  return found;
+}
+
+// Boolean to check if an edge is a tree
+bool Graph::isTreeEdge(Edge* e, vector<Edge*> treeEdges)
+{
+  for (int i = 0; i < treeEdges.size(); i++)
+  {
+    if (e == treeEdges[i])
+      return true;
+  }
+  return false;
+}
+
+// Compare weights of edges between the capital and vertices
+bool Graph::verticesWeightComparator::operator()(Vertex* a, Vertex* b)
+{ return a->getWeight() > b->getWeight(); }
+
+// Compare weights of edges
+bool Graph::edgesWeightComparator::operator()(Edge* a, Edge* b)
+{ return a->getWeight() > b->getWeight(); }
+
 
 // Define constructor of class Vertex
-Vertex::Vertex(string name, bool capital)
-{
-  cityName = name;
-  isCapital = capital;
-}
-
-// Destructor of a class Vertex
-Vertex::~Vertex()
+Vertex::Vertex(string name)
+: _name(name)
 { }
 
 // Get name of a vertex
 string Vertex::getName()
-{
-  return cityName;
-}
+{ return _name; }
+
+// Get edges of a vertex
+vector<Edge*> Vertex::getEdges()
+{ return _edges; }
 
 // Add an edge to the list of edges
-void Vertex::addEdge(Edge *e)
+void Vertex::addEdge(Edge* e)
+{  _edges.push_back(e); }
+
+// Get the predecessor vertex
+Vertex* Vertex::getPredVertex()
+{ return _predVertex; }
+
+// Get weight
+double Vertex::getWeight()
+{ return _weight; }
+
+// Boolean to check if a vertex is adjacent
+bool Vertex::isAdjacent(Vertex* v)
 {
-  edges.push_back(e);
+  for (int i = 0; i < _edges.size(); i++)
+  {
+    if (_edges[i]->getOppositeVertex(v)->getName() == _name)
+      return true;
+  }
+  return false;
 }
 
-// Get edge list
-vector<Edge *> Vertex::getEdgeList()
-{
-  return edges;
-}
+// Update the predecessor vertex
+void Vertex::updatePredVertex(Vertex* v)
+{ _predVertex = v; }
 
-// Check if a vertex is capital or not
-bool Vertex::isVertexCapital()
-{
-  return isCapital;
-}
+// Update the weight
+void Vertex::updateWeight(double weight)
+{ _weight = weight; }
+
 
 // Define constructor of class Edge
-Edge::Edge(string city1, string city2, bool bridge, int weight)
-{
-  cityOne = city1;
-  cityTwo = city2;
-  isBridge = bridge;
-  weightOfEdges = weight;
-}
-
-// Destructor of a class Edge
-Edge::~Edge()
+Edge::Edge(Vertex* city1, Vertex* city2, bool bridge, double weight)
+: _city1(city1), _city2(city2), _bridge(bridge), _weight(weight)
 { }
 
 // Return name of city1
-string Edge::getCityOneName()
-{
-  return cityOne;
-}
+Vertex* Edge::getCityOne()
+{ return _city1; }
 
 // Return name of city2
-string Edge::getCityTwoName()
-{
-  return cityTwo;
-}
+Vertex* Edge::getCityTwo()
+{ return _city2; }
 
 // Return boolean checking edges as bridge
-bool Edge::isEdgeBridge()
-{
-  return isBridge;
-}
+bool Edge::isBridge()
+{ return _bridge; }
 
 // Return weight of edges
-int Edge::getWeight()
+double Edge::getWeight()
+{ return _weight; }
+
+Vertex* Edge::getOppositeVertex(Vertex* v)
 {
-  return weightOfEdges;
+  if (_city2->getName() != v->getName())
+    return _city2;
+  else 
+    return _city1;
 }
