@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
         {
             if (vertices[index]->getName() == city1)
                 found = true;
-            else 
+            else
                 index++;
         }
 
@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
         {
             if (vertices[index]->getName() == city2)
                 found = true;
-            else 
+            else
                 index++;
         }
 
@@ -60,14 +60,14 @@ int main(int argc, char *argv[])
         std::cin >> bridgeFlag;
         if (bridgeFlag == 'B')
             isBridge = true;
-        else 
+        else
             isBridge = false;
         double weight;
         std::cin >> weight;
         Edge* e = new Edge(cityOne, cityTwo, isBridge, weight);
         edges.push_back(e);
     }
-    
+
     for (int i = 0; i < numOfEdges; i++)
     {
         Edge* theEdge = edges[i];
@@ -78,9 +78,12 @@ int main(int argc, char *argv[])
     Graph g(vertices, edges, capital);
     g.BFS();
     g.printShortestPath();
-    g.printMinSpanTree(g.minSpanTree());
+//RT    g.printMinSpanTree(g.minSpanTree()); // Skip because it crashes
+//RT    std::cerr << "printMinSpanTree() returned" <<endl; //RT
     g.connectedComponents();
-    g.articulationPoints();
+    std::cerr << "connectedComponents() returned" <<endl; //RT
+//RT    g.articulationPoints(); //Skip because it crashes
+//RT    std::cerr << "articulationPoints() returned" <<endl; //RT
     cout << "----------------------------------------------" << endl;
 
     // Check for eof and exit if so

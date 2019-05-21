@@ -36,16 +36,16 @@ class Vertex
     Vertex(string name);
 
     // Accessor for name of vertex
-    string getName();   
+    string getName();
 
-    // Accessor for the list of edges    
-    vector<Edge *> getEdges();   
+    // Accessor for the list of edges
+    vector<Edge *> getEdges();
 
     // Add an edge to the vertex's vector
-    void addEdge(Edge *e);  
-    
+    void addEdge(Edge *e);
+
     // Accessor for predecessor vertex
-    Vertex* getPredVertex();   
+    Vertex* getPredVertex();
 
     // Accessor for weight
     double getWeight();
@@ -57,6 +57,7 @@ class Vertex
     void updatePredVertex(Vertex* v);
 
     // Update weight when necessary
+//RT What does weight mean for a vertex?
     void updateWeight(double weight);
 
   private:
@@ -79,16 +80,16 @@ class Edge
     Vertex* getCityOne();
 
     // Accessor of city 2
-    Vertex* getCityTwo(); 
+    Vertex* getCityTwo();
 
     // Boolean to check if the edge is a bridge or not
-    bool isBridge();        
+    bool isBridge();
 
     // Accessor for weight
-    double getWeight(); 
+    double getWeight();
 
     // Accessor for the opposite vertex
-    Vertex* getOppositeVertex(Vertex* v);           
+    Vertex* getOppositeVertex(Vertex* v);
 
   private:
 
@@ -108,12 +109,14 @@ class Graph
     Graph(vector<Vertex*> vertices, vector<Edge*> edges, Vertex* capital);
 
     // Traverse vertices by breadth-first search
-    void BFS(); 
+//RT from where?
+    void BFS();
 
     // Dijkstra's algorithm to find shortest paths from capital
     void Dijkstra();
 
     // Find shortest path from the capital to a vertex
+//RT Where does the answer go?
     void shortestPath(Vertex* v);
 
     // Print the shortest path
@@ -126,12 +129,15 @@ class Graph
     void printMinSpanTree(vector<Edge*> e);
 
     // Find the partitioned regions when bridges are destroyed by storm
+//RT Where does the answer go?
     void connectedComponents();
 
     // Find articulation points
+//RT Where does the answer go?
     void articulationPoints();
 
     // Traverse by depth-first search
+//RT Where does the answer go?
     bool DFS(Vertex* v, vector<Vertex*> &visited, vector<Edge*> &treeEdges);
 
     // Accessor for vertices
@@ -144,7 +150,7 @@ class Graph
     Vertex* getCapital();
 
     // Accessor for a vertex given the name of city
-    Vertex* findVertex(string name);                                   
+    Vertex* findVertex(string name);
 
   private:
 
